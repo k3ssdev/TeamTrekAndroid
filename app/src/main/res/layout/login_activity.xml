@@ -2,6 +2,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity"
+    android:background="?android:attr/windowBackground"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
@@ -90,19 +91,22 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <!-- Botón de inicio de sesión en un ConstraintLayout interno -->
+
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_width="328dp"
+        android:layout_height="84dp"
         app:layout_constraintBottom_toTopOf="@+id/guidelineHorizontalBottom"
         app:layout_constraintEnd_toStartOf="@+id/guidelineVerticalEnd"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toEndOf="@+id/guidelineVerticalStart"
-        app:layout_constraintTop_toBottomOf="@+id/guidelineHorizontalButton">
+        app:layout_constraintTop_toBottomOf="@+id/guidelineHorizontalButton"
+        app:layout_constraintVertical_bias="0.283">
 
         <Button
             android:id="@+id/buttonLogin"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-
+            android:layout_width="237dp"
+            android:layout_height="64dp"
+android:textColor="@color/white"
             android:text="@string/Login"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -115,16 +119,17 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <ImageView
-        android:id="@+id/imageView4"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_margin="20dp"
+        android:id="@+id/imageView3"
+        android:layout_width="304dp"
+        android:layout_height="285dp"
         app:layout_constraintBottom_toTopOf="@+id/guidelineHorizontalTop"
         app:layout_constraintEnd_toStartOf="@+id/guidelineVerticalEnd"
+        app:layout_constraintHorizontal_bias="0.48"
         app:layout_constraintStart_toStartOf="@+id/guidelineVerticalStart"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@mipmap/ic_launcher_round"
-        android:contentDescription="@string/img" />
+        app:layout_constraintVertical_bias="1.0"
+        android:src="?attr/imagenTema"
+        />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
