@@ -21,4 +21,14 @@
     <string name="timestamp">TimeStamp</string>
     <string name="menu_calendar">Horarios</string>
     <string name="menu_form">Ficha</string>
+
+
+        <string name="nombreLabel">Nombre:</string>
+        <string name="apellidoLabel">Apellido:</string>
+        <string name="identificacionLabel">Identificación:</string>
+        <string name="direccionLabel">Dirección:</string>
+        <string name="telefonoLabel">Teléfono:</string>
+        <string name="correoLabel">Correo:</string>
+
+
 </resources>

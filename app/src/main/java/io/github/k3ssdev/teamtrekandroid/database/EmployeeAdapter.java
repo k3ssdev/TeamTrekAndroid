@@ -40,32 +40,54 @@ public class EmployeeAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         if (convertView == null) {
-            convertView = LayoutInflater.from(context).inflate(R.layout.item_employee, parent, false);
+            convertView = LayoutInflater.from(context).inflate(R.layout.card_employee, parent, false);
         }
 
         Empleado employee = employees.get(position);
 
-        TextView idTextView = convertView.findViewById(R.id.idEmployeeTextView);
-        TextView nameTextView = convertView.findViewById(R.id.nombreEmployeeTextView);
-        TextView lastNameTextView = convertView.findViewById(R.id.apellidoEmployeeTextView);
-        TextView identificationTextView = convertView.findViewById(R.id.identificacionEmployeeTextView);
-        TextView emailTextView = convertView.findViewById(R.id.correoEmployeeTextView);
-        TextView phoneTextView = convertView.findViewById(R.id.telefonoEmployeeTextView);
-        TextView addressTextView = convertView.findViewById(R.id.direccionEmployeeTextView);
-        TextView dateTextView = convertView.findViewById(R.id.fechaContratacionEmployeeTextView);
+        TextView idLabel = convertView.findViewById(R.id.idLabel);
+        TextView idValue = convertView.findViewById(R.id.idValue);
+        TextView nombreLabel = convertView.findViewById(R.id.nombreLabel);
+        TextView nombreValue = convertView.findViewById(R.id.nombreValue);
+        TextView apellidoLabel = convertView.findViewById(R.id.apellidoLabel);
+        TextView apellidoValue = convertView.findViewById(R.id.apellidoValue);
+        TextView identificacionLabel = convertView.findViewById(R.id.identificacionLabel);
+        TextView identificacionValue = convertView.findViewById(R.id.identificacionValue);
+        TextView correoLabel = convertView.findViewById(R.id.correoLabel);
+        TextView correoValue = convertView.findViewById(R.id.correoValue);
+        TextView telefonoLabel = convertView.findViewById(R.id.telefonoLabel);
+        TextView telefonoValue = convertView.findViewById(R.id.telefonoValue);
+        TextView direccionLabel = convertView.findViewById(R.id.direccionLabel);
+        TextView direccionValue = convertView.findViewById(R.id.direccionValue);
+        TextView fechaContratacionLabel = convertView.findViewById(R.id.fechaContratacionLabel);
+        TextView fechaContratacionValue = convertView.findViewById(R.id.fechaContratacionValue);
 
-        idTextView.setText(String.valueOf(employee.getID()));
-        nameTextView.setText(employee.getNombre());
-        lastNameTextView.setText(employee.getApellido());
-        identificationTextView.setText(employee.getIdentificacion());
-        emailTextView.setText(employee.getEmail());
-        phoneTextView.setText(employee.getTelefono());
-        addressTextView.setText(employee.getDireccion());
+        idLabel.setText("ID: ");
+        idValue.setText(String.valueOf(employee.getID()));
 
-        // Formatear la fecha y establecerla en el TextView
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy"); // Cambia el formato según tus necesidades
+        nombreLabel.setText("Nombre: ");
+        nombreValue.setText(employee.getNombre());
+
+        apellidoLabel.setText("Apellido: ");
+        apellidoValue.setText(employee.getApellido());
+
+        identificacionLabel.setText("Identificación: ");
+        identificacionValue.setText(employee.getIdentificacion());
+
+        correoLabel.setText("Correo: ");
+        correoValue.setText(employee.getEmail());
+
+        telefonoLabel.setText("Teléfono: ");
+        telefonoValue.setText(employee.getTelefono());
+
+        direccionLabel.setText("Dirección: ");
+        direccionValue.setText(employee.getDireccion());
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
         String formattedDate = dateFormat.format(employee.getFechaContratacion());
-        dateTextView.setText(formattedDate);
+
+        fechaContratacionLabel.setText("Antigüedad: ");
+        fechaContratacionValue.setText(formattedDate);
 
         return convertView;
     }
