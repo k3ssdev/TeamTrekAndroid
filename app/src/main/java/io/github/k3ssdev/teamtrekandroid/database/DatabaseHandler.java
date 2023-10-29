@@ -4,32 +4,36 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.widget.Toast;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.StringReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 
 import io.github.k3ssdev.teamtrekandroid.MainActivity;
 
 public class DatabaseHandler {
-    private Activity activity_apr;
-    // Token para la cabecera de la solicitud
-    //String token = "oPGP8M*jmePkYRnmnxU2v%TgJ&V9r4VfZv6q&LLe%q!c#3U84KWi5x9K9m";
+    private Activity activity;
 
     public DatabaseHandler(Activity activity) {
-        this.activity_apr = activity;
+        this.activity = activity;
     }
 
     public class ValidarUsuario extends AsyncTask<String, Void, String[]> {
@@ -117,12 +121,12 @@ public class DatabaseHandler {
                 // Verifica el resultado y realiza las acciones necesarias
                 if (resultado_apr.equals("ok")) {
                     // El resultado es "ok", abre la segunda actividad
-                    Intent intent = new Intent(activity_apr, MainActivity.class);
-                    activity_apr.startActivity(intent);
+                    Intent intent = new Intent(activity, MainActivity.class);
+                    activity.startActivity(intent);
 
                 } else if (resultado_apr.equals("ko")) {
                     // El resultado es "ko", realiza otra acción
-                    Toast.makeText(activity_apr, "Usuario/Contraseña incorrectos", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(activity, "Usuario/Contraseña incorrectos", Toast.LENGTH_SHORT).show();
                     //SQLiteHandler sqLiteHandler_apr = new SQLiteHandler(activity_apr);
 
                     // Insertar registro en la base de datos
@@ -134,61 +138,75 @@ public class DatabaseHandler {
                 }
             } else {
                 // El resultado es null, hubo un error en la petición
-                Toast.makeText(activity_apr, "Error en la conexión", Toast.LENGTH_SHORT).show();
+                Toast.makeText(activity, "Error en la conexión", Toast.LENGTH_SHORT).show();
             }
         }
     }
 
-    public List<User> consultarUsuarios() {
-        String urlString_apr = "http://10.0.2.2/consultarusuarios.php";
+    public static class ConsultarEmpleadoTask extends AsyncTask<Void, Void, List<Empleado>> {
+        @Override
+        protected List<Empleado> doInBackground(Void... voids) {
+            String urlString = "http://10.0.2.2/consultaempleados.php"; // Cambia esto a tu URL
+            List<Empleado> empleados = new ArrayList<>();
 
-        List<User> usuarios_apr = new ArrayList<>();
+            try {
+                URL url = new URL(urlString);
+                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                connection.setRequestMethod("GET");
 
+                InputStream input = connection.getInputStream();
+                BufferedReader reader = new BufferedReader(new InputStreamReader(input));
+                StringBuilder response = new StringBuilder();
+                String line;
 
-        try {
-            // Crear la conexión HTTP
-            URL url_apr = new URL(urlString_apr);
-            HttpURLConnection conexion_apr = (HttpURLConnection) url_apr.openConnection();
-            conexion_apr.setRequestMethod("GET");
-
-            // Agrega el token como cabecera a la solicitud, COMENTAR ESTA LÍNEA PARA PROBAR LA APP EN SERVER PROPIO
-            //conexion.setRequestProperty("Authorization", "Bearer " + token);
-
-            // Leer la respuesta del servidor
-            InputStream entrada_apr = conexion_apr.getInputStream();
-            BufferedReader lector_apr = new BufferedReader(new InputStreamReader(entrada_apr));
-            StringBuilder respuesta_apr = new StringBuilder();
-            String linea;
-
-            while ((linea = lector_apr.readLine()) != null) {
-                respuesta_apr.append(linea);
-            }
-
-            // Cerrar la conexión HTTP
-            entrada_apr.close();
-            conexion_apr.disconnect();
-
-            // Procesar la respuesta XML
-            String xmlString_apr = respuesta_apr.toString();
-            Document document_apr = XMLParser.convertStringToXMLDocument(xmlString_apr);
-            NodeList usuarioNodes_apr = document_apr.getElementsByTagName("usuario");
-
-            for (int i = 0; i < usuarioNodes_apr.getLength(); i++) {
-                Node usuarioNode_apr = usuarioNodes_apr.item(i);
-                if (usuarioNode_apr.getNodeType() == Node.ELEMENT_NODE) {
-                    Element usuarioElement = (Element) usuarioNode_apr;
-
-                    String nombreUsuario_apr = usuarioElement.getElementsByTagName("nombreUsuario").item(0).getTextContent();
-                    String contrasena_apr = usuarioElement.getElementsByTagName("contrasena").item(0).getTextContent();
-                    String fechaNacimiento_apr = usuarioElement.getElementsByTagName("fecha_nacimiento").item(0).getTextContent();
-
-                    User usuario_apr = new User(nombreUsuario_apr, contrasena_apr, fechaNacimiento_apr);
-                    usuarios_apr.add(usuario_apr);
+                while ((line = reader.readLine()) != null) {
+                    response.append(line);
                 }
+
+                connection.disconnect();
+
+                String xmlString = response.toString();
+                DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+                DocumentBuilder builder = factory.newDocumentBuilder();
+                Document document = builder.parse(new InputSource(new StringReader(xmlString)));
+
+                NodeList empleadoNodes = document.getElementsByTagName("empleado");
+
+                for (int i = 0; i < empleadoNodes.getLength(); i++) {
+                    Node empleadoNode = empleadoNodes.item(i);
+                    if (empleadoNode.getNodeType() == Node.ELEMENT_NODE) {
+                        Element empleadoElement = (Element) empleadoNode;
+
+                        int idEmpleado = Integer.parseInt(empleadoElement.getElementsByTagName("ID").item(0).getTextContent());
+                        String nombreEmpleado = empleadoElement.getElementsByTagName("Nombre").item(0).getTextContent();
+                        String apellidoEmpleado = empleadoElement.getElementsByTagName("Apellido").item(0).getTextContent();
+                        String identificacionEmpleado = empleadoElement.getElementsByTagName("Identificacion").item(0).getTextContent();
+                        String direccionEmpleado = empleadoElement.getElementsByTagName("Direccion").item(0).getTextContent();
+                        String telefonoEmpleado = empleadoElement.getElementsByTagName("Telefono").item(0).getTextContent();
+                        String emailEmpleado = empleadoElement.getElementsByTagName("Email").item(0).getTextContent();
+                        String fechaContratacionEmpleadoStr = empleadoElement.getElementsByTagName("FechaContratacion").item(0).getTextContent();
+
+                        // Convierte la cadena de fecha a un objeto Date (ajusta el formato según tus datos reales)
+                        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                        Date fechaContratacionEmpleado = dateFormat.parse(fechaContratacionEmpleadoStr);
+
+                        // Crea una instancia de Empleado y agrégala a la lista
+                        Empleado empleado = new Empleado(idEmpleado, nombreEmpleado, apellidoEmpleado, identificacionEmpleado, direccionEmpleado, telefonoEmpleado, emailEmpleado, fechaContratacionEmpleado);
+                        empleados.add(empleado);
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+
+            return empleados;
         }
-        return usuarios_apr;
+
+
+    @Override
+    protected void onPostExecute(List<Empleado> empleados) {
+        super.onPostExecute(empleados);
+
     }
+}
 }
