@@ -19,4 +19,6 @@
     <string name="fecha_nacimiento">Fecha Nacimiento</string>
     <string name="volver">Volver</string>
     <string name="timestamp">TimeStamp</string>
+    <string name="menu_calendar">Horarios</string>
+    <string name="menu_form">Ficha</string>
 </resources>

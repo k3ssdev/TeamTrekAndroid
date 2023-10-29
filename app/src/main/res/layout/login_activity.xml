@@ -31,7 +31,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.40" />
+        app:layout_constraintGuide_percent="0.45" />
 
     <!-- Guideline horizontal al 40% de la altura de la pantalla -->
     <androidx.constraintlayout.widget.Guideline
@@ -95,7 +95,7 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="60dp"
         app:layout_constraintBottom_toTopOf="@+id/guidelineHorizontalBottom"
         app:layout_constraintEnd_toStartOf="@+id/guidelineVerticalEnd"
         app:layout_constraintHorizontal_bias="1.0"
@@ -106,9 +106,10 @@
         <Button
             android:id="@+id/buttonLogin"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
             android:text="@string/Login"
             android:textColor="@color/white"
+            android:textSize="18sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -121,16 +122,15 @@
 
     <ImageView
         android:id="@+id/imageView3"
-        android:layout_width="304dp"
-        android:layout_height="285dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:src="?attr/imagenTema"
         app:layout_constraintBottom_toTopOf="@+id/guidelineHorizontalTop"
         app:layout_constraintEnd_toStartOf="@+id/guidelineVerticalEnd"
         app:layout_constraintHorizontal_bias="0.48"
         app:layout_constraintStart_toStartOf="@+id/guidelineVerticalStart"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0"
-        android:src="?attr/imagenTema"
-        />
+        app:layout_constraintVertical_bias="0.636" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
