@@ -1,5 +1,6 @@
 package io.github.k3ssdev.teamtrekandroid.database;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,8 +15,8 @@ import io.github.k3ssdev.teamtrekandroid.R;
 
 public class EmployeeAdapter extends BaseAdapter {
 
-    private Context context;
-    private List<Empleado> employees;
+    private final Context context;
+    private final List<Empleado> employees;
 
     public EmployeeAdapter(Context context, List<Empleado> employees) {
         this.context = context;
@@ -83,7 +84,7 @@ public class EmployeeAdapter extends BaseAdapter {
         direccionLabel.setText("Dirección: ");
         direccionValue.setText(employee.getDireccion());
 
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
         String formattedDate = dateFormat.format(employee.getFechaContratacion());
 
         fechaContratacionLabel.setText("Antigüedad: ");
