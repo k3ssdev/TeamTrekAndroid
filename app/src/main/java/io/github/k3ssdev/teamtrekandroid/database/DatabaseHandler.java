@@ -31,6 +31,7 @@ import io.github.k3ssdev.teamtrekandroid.MainActivity;
 
 public class DatabaseHandler {
     private Activity activity;
+    public static final String EXTRA_MESSAGE = "io.github.k3ssdev.teamtrekandroid.USERNAME";
 
     public DatabaseHandler(Activity activity) {
         this.activity = activity;
@@ -122,7 +123,12 @@ public class DatabaseHandler {
                 if (resultado_apr.equals("ok")) {
                     // El resultado es "ok", abre la segunda actividad
                     Intent intent = new Intent(activity, MainActivity.class);
+
+                    //Pasar el nombre de usuario a la actividad principal
+                    intent.putExtra(EXTRA_MESSAGE, usuario_apr);
+
                     activity.startActivity(intent);
+
 
                 } else if (resultado_apr.equals("ko")) {
                     // El resultado es "ko", realiza otra acción
