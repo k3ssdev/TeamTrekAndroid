@@ -1,4 +1,4 @@
-package io.github.k3ssdev.teamtrekandroid.ui.slideshow;
+package io.github.k3ssdev.teamtrekandroid.ui.employee;
 
 import android.os.Bundle;
 import android.util.Log;

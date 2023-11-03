@@ -1,4 +1,4 @@
-package io.github.k3ssdev.teamtrekandroid.ui.gallery;
+package io.github.k3ssdev.teamtrekandroid.ui.calendar;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;

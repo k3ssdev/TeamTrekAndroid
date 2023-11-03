@@ -9,11 +9,11 @@
             android:icon="@drawable/baseline_home_24"
             android:title="@string/menu_home" />
         <item
-            android:id="@+id/nav_gallery"
+            android:id="@+id/nav_calendar"
             android:icon="@drawable/baseline_calendar_month_24"
             android:title="@string/menu_calendar" />
         <item
-            android:id="@+id/nav_slideshow"
+            android:id="@+id/nav_employee"
             android:icon="@drawable/baseline_person_24"
             android:title="@string/menu_form" />
     </group>

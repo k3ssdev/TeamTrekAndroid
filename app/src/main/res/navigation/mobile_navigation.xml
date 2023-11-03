@@ -12,14 +12,14 @@
         tools:layout="@layout/fragment_home" />
 
     <fragment
-        android:id="@+id/nav_gallery"
-        android:name="io.github.k3ssdev.teamtrekandroid.ui.gallery.CalendarFragment"
-        android:label="@string/menu_gallery"
+        android:id="@+id/nav_calendar"
+        android:name="io.github.k3ssdev.teamtrekandroid.ui.calendar.CalendarFragment"
+        android:label="@string/menu_calendar"
         tools:layout="@layout/fragment_calendar" />
 
     <fragment
-        android:id="@+id/nav_slideshow"
-        android:name="io.github.k3ssdev.teamtrekandroid.ui.slideshow.EmployeeFragment"
-        android:label="@string/menu_slideshow"
+        android:id="@+id/nav_employee"
+        android:name="io.github.k3ssdev.teamtrekandroid.ui.employee.EmployeeFragment"
+        android:label="@string/menu_employee"
         tools:layout="@layout/fragment_employee" />
 </navigation>

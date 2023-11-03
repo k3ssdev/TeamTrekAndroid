@@ -1,6 +1,17 @@
-<?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="app_name">TeamTrekAndroid</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="menu_home">Home</string>
+    <string name="menu_calendar">Horario</string>
+    <string name="menu_employee">Empleado</string>
     <string name="logout">Logout</string>
+
     <string name="Login">Iniciar Sesión</string>
     <string name="contrasena">Contraseña</string>
     <string name="usuario">Usuario</string>
@@ -8,6 +19,13 @@
     <string name="fecha_nacimiento">Fecha Nacimiento</string>
     <string name="volver">Volver</string>
     <string name="timestamp">TimeStamp</string>
-    <string name="menu_calendar">Horarios</string>
-    <string name="menu_form">Ficha</string>
+    <string name="menu_form">Empleado</string>
+
+
+    <string name="nombreLabel">Nombre:</string>
+    <string name="apellidoLabel">Apellido:</string>
+    <string name="identificacionLabel">Identificación:</string>
+    <string name="direccionLabel">Dirección:</string>
+    <string name="telefonoLabel">Teléfono:</string>
+    <string name="correoLabel">Correo:</string>
 </resources>

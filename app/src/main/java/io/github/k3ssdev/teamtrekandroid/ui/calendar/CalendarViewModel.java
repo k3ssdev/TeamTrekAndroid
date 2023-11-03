@@ -1,4 +1,4 @@
-package io.github.k3ssdev.teamtrekandroid.ui.gallery;
+package io.github.k3ssdev.teamtrekandroid.ui.calendar;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -10,7 +10,7 @@ public class CalendarViewModel extends ViewModel {
 
     public CalendarViewModel() {
         mText = new MutableLiveData<>();
-        mText.setValue("This is gallery fragment");
+        mText.setValue("This is calendar fragment");
     }
 
     public LiveData<String> getText() {

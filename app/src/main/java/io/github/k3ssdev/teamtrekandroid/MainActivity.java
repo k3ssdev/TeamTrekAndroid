@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
 
         // Configurar AppBarConfiguration para relacionar el NavController con la AppBar
         mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.nav_home, R.id.nav_gallery, R.id.nav_slideshow)
+                R.id.nav_home, R.id.nav_calendar, R.id.nav_employee)
                 .setOpenableLayout(drawer)
                 .build();
 
