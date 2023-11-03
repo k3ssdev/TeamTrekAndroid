@@ -43,7 +43,7 @@ public class DatabaseHandler {
             String usuario_apr = params[0];
             String contrasena_apr = params[1];
             //String urlString_apr = "http://192.168.1.227/validacuenta.php"; // IP del servidor XAMPP
-            String urlString_apr = "http://10.0.2.2/validacuenta.php"; // localhost para el emulador
+            String urlString_apr = "http://10.0.2.2/teamtrek/validacuenta.php"; // localhost para el emulador
 
             String resultado_apr = null;
 
@@ -152,7 +152,7 @@ public class DatabaseHandler {
     public static class ConsultarEmpleadoTask extends AsyncTask<Void, Void, List<Empleado>> {
         @Override
         protected List<Empleado> doInBackground(Void... voids) {
-            String urlString = "http://10.0.2.2/consultaempleados.php"; // Cambia esto a tu URL
+            String urlString = "http://10.0.2.2/teamtrek/consultaempleados.php"; // Cambia esto a tu URL
             List<Empleado> empleados = new ArrayList<>();
 
             try {
@@ -207,7 +207,6 @@ public class DatabaseHandler {
 
             return empleados;
         }
-
 
     @Override
     protected void onPostExecute(List<Empleado> empleados) {
