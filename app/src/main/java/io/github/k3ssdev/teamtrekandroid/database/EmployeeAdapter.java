@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.Locale;
 
 import io.github.k3ssdev.teamtrekandroid.R;
 
@@ -38,58 +39,51 @@ public class EmployeeAdapter extends BaseAdapter {
         return position;
     }
 
+    @SuppressLint("SimpleDateFormat") // Solo si estas seguro que el formato es correcto en todos los locales
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         if (convertView == null) {
             convertView = LayoutInflater.from(context).inflate(R.layout.card_employee, parent, false);
         }
 
+        // Obtiene el empleado actual basado en la posición.
         Empleado employee = employees.get(position);
 
-        TextView idLabel = convertView.findViewById(R.id.idLabel);
+        // Enlaza las vistas de texto con las del layout.
         TextView idValue = convertView.findViewById(R.id.idValue);
-        TextView nombreLabel = convertView.findViewById(R.id.nombreLabel);
         TextView nombreValue = convertView.findViewById(R.id.nombreValue);
-        TextView apellidoLabel = convertView.findViewById(R.id.apellidoLabel);
-        TextView apellidoValue = convertView.findViewById(R.id.apellidoValue);
-        TextView identificacionLabel = convertView.findViewById(R.id.identificacionLabel);
-        TextView identificacionValue = convertView.findViewById(R.id.identificacionValue);
-        TextView correoLabel = convertView.findViewById(R.id.correoLabel);
+        TextView departamentoValue = convertView.findViewById(R.id.departamentoValue);
+        TextView horarioValue = convertView.findViewById(R.id.horarioValue);
+        TextView usuarioValue = convertView.findViewById(R.id.usuarioValue);
         TextView correoValue = convertView.findViewById(R.id.correoValue);
-        TextView telefonoLabel = convertView.findViewById(R.id.telefonoLabel);
         TextView telefonoValue = convertView.findViewById(R.id.telefonoValue);
-        TextView direccionLabel = convertView.findViewById(R.id.direccionLabel);
         TextView direccionValue = convertView.findViewById(R.id.direccionValue);
-        TextView fechaContratacionLabel = convertView.findViewById(R.id.fechaContratacionLabel);
-        TextView fechaContratacionValue = convertView.findViewById(R.id.fechaContratacionValue);
+        TextView fechaNacimientoValue = convertView.findViewById(R.id.fechaNacimientoValue);
+        TextView fechaIngresoValue = convertView.findViewById(R.id.fechaIngresoValue);
 
-        idLabel.setText("ID: ");
+        // Asigna los valores a las vistas de texto.
         idValue.setText(String.valueOf(employee.getID()));
-
-        nombreLabel.setText("Nombre: ");
         nombreValue.setText(employee.getNombre());
+        departamentoValue.setText(employee.getNombreDepartamento());
 
-        apellidoLabel.setText("Apellido: ");
-        apellidoValue.setText(employee.getApellido());
+        // Formatea las horas de inicio y fin del horario.
+        SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
+        String formattedHoraInicio = timeFormat.format(employee.getHoraInicio());
+        String formattedHoraFin = timeFormat.format(employee.getHoraFin());
+        horarioValue.setText(formattedHoraInicio + " - " + formattedHoraFin);
 
-        identificacionLabel.setText("Identificación: ");
-        identificacionValue.setText(employee.getIdentificacion());
-
-        correoLabel.setText("Correo: ");
+        usuarioValue.setText(employee.getUsuario());
         correoValue.setText(employee.getEmail());
-
-        telefonoLabel.setText("Teléfono: ");
         telefonoValue.setText(employee.getTelefono());
-
-        direccionLabel.setText("Dirección: ");
         direccionValue.setText(employee.getDireccion());
 
-        @SuppressLint("SimpleDateFormat") SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
-        String formattedDate = dateFormat.format(employee.getFechaContratacion());
+        // Formatea y asigna las fechas.
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
+        fechaNacimientoValue.setText(dateFormat.format(employee.getFechaNacimiento()));
+        fechaIngresoValue.setText(dateFormat.format(employee.getFechaIngreso()));
 
-        fechaContratacionLabel.setText("Antigüedad: ");
-        fechaContratacionValue.setText(formattedDate);
-
+        // Retorna la vista completa para mostrarla en la lista.
         return convertView;
     }
+
 }

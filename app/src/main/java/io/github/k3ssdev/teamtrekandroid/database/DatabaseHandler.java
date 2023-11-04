@@ -15,6 +15,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.StringReader;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
@@ -149,12 +150,35 @@ public class DatabaseHandler {
         }
     }
 
-    public static class ConsultarEmpleadoTask extends AsyncTask<Void, Void, List<Empleado>> {
+    public interface ConsultarEmpleadoCallback {
+        void onConsultaCompletada(List<Empleado> resultado);
+    }
+
+    public static class ConsultarEmpleadoTask extends AsyncTask<String, Void, List<Empleado>> {
+
+        private ConsultarEmpleadoCallback callback;
+
+        public ConsultarEmpleadoTask(ConsultarEmpleadoCallback callback) {
+            this.callback = callback;
+        }
         @Override
-        protected List<Empleado> doInBackground(Void... voids) {
+        protected List<Empleado> doInBackground(String... params) {
             String urlString = "http://10.0.2.2/teamtrek/consultaempleados.php"; // Cambia esto a tu URL
+
+            // Añade el parámetro de nombre de usuario a la URL si se ha proporcionado uno
+            if (params != null && params.length > 0 && params[0] != null && !params[0].isEmpty()) {
+                try {
+                    String username = params[0];
+                    urlString += "?username=" + URLEncoder.encode(username, "UTF-8");
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            // Crea una lista vacía para guardar los empleados
             List<Empleado> empleados = new ArrayList<>();
 
+            // Realiza la petición GET
             try {
                 URL url = new URL(urlString);
                 HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -176,6 +200,9 @@ public class DatabaseHandler {
                 DocumentBuilder builder = factory.newDocumentBuilder();
                 Document document = builder.parse(new InputSource(new StringReader(xmlString)));
 
+                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
+
                 NodeList empleadoNodes = document.getElementsByTagName("empleado");
 
                 for (int i = 0; i < empleadoNodes.getLength(); i++) {
@@ -183,35 +210,55 @@ public class DatabaseHandler {
                     if (empleadoNode.getNodeType() == Node.ELEMENT_NODE) {
                         Element empleadoElement = (Element) empleadoNode;
 
-                        int idEmpleado = Integer.parseInt(empleadoElement.getElementsByTagName("ID").item(0).getTextContent());
-                        String nombreEmpleado = empleadoElement.getElementsByTagName("Nombre").item(0).getTextContent();
-                        String apellidoEmpleado = empleadoElement.getElementsByTagName("Apellido").item(0).getTextContent();
-                        String identificacionEmpleado = empleadoElement.getElementsByTagName("Identificacion").item(0).getTextContent();
-                        String direccionEmpleado = empleadoElement.getElementsByTagName("Direccion").item(0).getTextContent();
-                        String telefonoEmpleado = empleadoElement.getElementsByTagName("Telefono").item(0).getTextContent();
-                        String emailEmpleado = empleadoElement.getElementsByTagName("Email").item(0).getTextContent();
-                        String fechaContratacionEmpleadoStr = empleadoElement.getElementsByTagName("FechaContratacion").item(0).getTextContent();
+                        // Identificacion
+                        Element identificacion = (Element) empleadoElement.getElementsByTagName("identificacion").item(0);
+                        int idEmpleado = Integer.parseInt(identificacion.getElementsByTagName("ID").item(0).getTextContent());
+                        String nombreEmpleado = identificacion.getElementsByTagName("Nombre").item(0).getTextContent();
+                        String usuarioEmpleado = identificacion.getElementsByTagName("Usuario").item(0).getTextContent();
+                        Date fechaIngresoEmpleado = dateFormat.parse(identificacion.getElementsByTagName("FechaIngreso").item(0).getTextContent());
 
-                        // Convierte la cadena de fecha a un objeto Date (ajusta el formato según tus datos reales)
-                        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-                        Date fechaContratacionEmpleado = dateFormat.parse(fechaContratacionEmpleadoStr);
+                        // Departamento
+                        String nombreDepartamento = empleadoElement.getElementsByTagName("NombreDepartamento").item(0).getTextContent();
 
-                        // Crea una instancia de Empleado y agrégala a la lista
-                        Empleado empleado = new Empleado(idEmpleado, nombreEmpleado, apellidoEmpleado, identificacionEmpleado, direccionEmpleado, telefonoEmpleado, emailEmpleado, fechaContratacionEmpleado);
+                        // Horario
+                        String descripcionHorario = empleadoElement.getElementsByTagName("DescripcionHorario").item(0).getTextContent();
+                        Date horaInicio = timeFormat.parse(empleadoElement.getElementsByTagName("HoraInicio").item(0).getTextContent());
+                        Date horaFin = timeFormat.parse(empleadoElement.getElementsByTagName("HoraFin").item(0).getTextContent());
+
+                        // Datos personales
+                        Element datosPersonales = (Element) empleadoElement.getElementsByTagName("datosPersonales").item(0);
+                        String telefonoEmpleado = datosPersonales.getElementsByTagName("Telefono").item(0).getTextContent();
+                        String direccionEmpleado = datosPersonales.getElementsByTagName("Direccion").item(0).getTextContent();
+                        String emailEmpleado = datosPersonales.getElementsByTagName("Email").item(0).getTextContent();
+                        Date fechaNacimientoEmpleado = dateFormat.parse(datosPersonales.getElementsByTagName("FechaNacimiento").item(0).getTextContent());
+                        String nifEmpleado = datosPersonales.getElementsByTagName("NIF").item(0).getTextContent();
+
+                        // Crear instancia de Empleado
+                        Empleado empleado = new Empleado(
+                                idEmpleado, nombreEmpleado, fechaIngresoEmpleado, nombreDepartamento,
+                                descripcionHorario, horaInicio, horaFin, usuarioEmpleado,
+                                telefonoEmpleado, direccionEmpleado, emailEmpleado,
+                                fechaNacimientoEmpleado, nifEmpleado
+                        );
                         empleados.add(empleado);
                     }
                 }
             } catch (Exception e) {
                 e.printStackTrace();
+
             }
 
             return empleados;
         }
 
-    @Override
-    protected void onPostExecute(List<Empleado> empleados) {
-        super.onPostExecute(empleados);
+        @Override
+        protected void onPostExecute(List<Empleado> resultado) {
+            super.onPostExecute(resultado);
+            if (callback != null) {
+                callback.onConsultaCompletada(resultado);
+            }
+        }
 
-    }
+
 }
 }

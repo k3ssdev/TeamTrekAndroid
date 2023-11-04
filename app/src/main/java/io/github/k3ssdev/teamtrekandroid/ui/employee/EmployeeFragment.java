@@ -42,7 +42,16 @@ public class EmployeeFragment extends Fragment {
     }
 
     private List<Empleado> getEmployeeDataFromDatabase() {
-        DatabaseHandler.ConsultarEmpleadoTask consultarEmpleadoTask = new DatabaseHandler.ConsultarEmpleadoTask();
+        DatabaseHandler.ConsultarEmpleadoTask consultarEmpleadoTask = new DatabaseHandler.ConsultarEmpleadoTask(new DatabaseHandler.ConsultarEmpleadoCallback() {
+            @Override
+            public void onConsultaCompletada(List<Empleado> resultado) {
+                // Asegúrate de que el fragment está todavía en el estado correcto
+                if (isAdded() && resultado != null && !resultado.isEmpty()) {
+                    employeeAdapter = new EmployeeAdapter(requireContext(), resultado);
+                }
+            }
+        });
+
         try {
             return consultarEmpleadoTask.execute().get();
         } catch (Exception e) {

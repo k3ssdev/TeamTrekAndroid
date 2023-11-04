@@ -9,38 +9,46 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import java.util.List;
+
 import io.github.k3ssdev.teamtrekandroid.SharedViewModel;
 import io.github.k3ssdev.teamtrekandroid.database.DatabaseHandler;
+import io.github.k3ssdev.teamtrekandroid.database.Empleado;
 import io.github.k3ssdev.teamtrekandroid.databinding.FragmentHomeBinding;
 
 public class HomeFragment extends Fragment {
-
 
     private FragmentHomeBinding binding;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        // Obtener la instancia de HomeViewModel utilizando ViewModelProvider
         HomeViewModel homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
 
-        // Utilizar binding para interactuar con el layout
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        // Obtener el SharedViewModel del ámbito de la actividad
         SharedViewModel sharedViewModel = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
-        // Observar los cambios en el modelo de datos compartido y actualizar la UI correspondientemente
-        sharedViewModel.getSelected().observe(getViewLifecycleOwner(), s -> {
-            // Registrar en el log el nombre de usuario observado
-            Log.d("HomeFragment", "Username observed: " + s);
-            // Suponiendo que 's' es el nombre de usuario, se establece en el TextView
-            binding.nombreUsuario.setText(s);
+
+        // Observar los cambios en el modelo de datos compartido
+        sharedViewModel.getSelected().observe(getViewLifecycleOwner(), username -> {
+            Log.d("HomeFragment", "Username recibido: " + username);
+
+            // Llama al AsyncTask para obtener los datos del empleado
+            new DatabaseHandler.ConsultarEmpleadoTask(new DatabaseHandler.ConsultarEmpleadoCallback() {
+                @Override
+                public void onConsultaCompletada(List<Empleado> resultado) {
+                    // Aquí actualizas tu UI con el resultado
+                    // Como es un ejemplo, solo actualizaré el nombre del empleado
+                    if (!resultado.isEmpty()) {
+                        // Obtiene el primer empleado (en caso de que haya más de uno, ajusta según tu lógica)
+                        Empleado empleado = resultado.get(0);
+                        binding.nombreUsuario.setText(empleado.getUsuario());
+                        //binding.puestoUsuario.setText(empleado.getPuesto());
+                        // Haz lo mismo con los otros TextViews
+                    }
+                }
+            }).execute(username);
         });
-
-        // Usa databaseHandler para obtener el puesto del empleado y el departamento
-        // y establecerlos en los TextView correspondientes
-
-
 
         return root;
     }
@@ -48,7 +56,8 @@ public class HomeFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        // Anular el binding cuando la vista es destruida
         binding = null;
     }
+
+    // ... Asegúrate de tener definida la interfaz ConsultarEmpleadoCallback y la clase Empleado correctamente
 }

@@ -22,178 +22,174 @@
             android:orientation="vertical"
             android:padding="16dp">
 
-
-
             <!-- Aquí se encuentra el TableLayout -->
-            <androidx.constraintlayout.widget.ConstraintLayout
+            <TableLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="wrap_content"
+                android:shrinkColumns="1"
+                android:stretchColumns="0">
 
-                <TableLayout
-                    android:layout_width="352dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="1dp"
-                    android:layout_marginEnd="1dp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent">
+                <!-- ID -->
+                <TableRow>
+                    <TextView
+                        android:id="@+id/idLabel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="ID:"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+                    <TextView
+                        android:id="@+id/idValue"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="16sp" />
+                </TableRow>
 
-                    <!-- Aquí se encuentran los TableRows -->
-                    <TableRow>
+                <!-- Nombre -->
+                <TableRow>
+                    <TextView
+                        android:id="@+id/nombreLabel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Nombre:"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+                    <TextView
+                        android:id="@+id/nombreValue"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="16sp" />
+                </TableRow>
 
-                        <TextView
-                            android:id="@+id/idLabel"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="ID:"
-                            android:textSize="16sp"
-                            android:textStyle="bold" />
+                <!-- Departamento -->
+                <TableRow>
+                    <TextView
+                        android:id="@+id/departamentoLabel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Departamento:"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+                    <TextView
+                        android:id="@+id/departamentoValue"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="16sp" />
+                </TableRow>
 
-                        <TextView
-                            android:id="@+id/idValue"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="12345"
-                            android:textSize="16sp" />
-                    </TableRow>
+                <!-- Descripción Horario -->
+                <TableRow>
+                    <TextView
+                        android:id="@+id/horarioLabel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Horario:"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+                    <TextView
+                        android:id="@+id/horarioValue"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="16sp" />
+                </TableRow>
 
-                    <TableRow>
+                <!-- Usuario -->
+                <TableRow>
+                    <TextView
+                        android:id="@+id/usuarioLabel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Usuario:"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+                    <TextView
+                        android:id="@+id/usuarioValue"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="16sp" />
+                </TableRow>
 
-                        <TextView
-                            android:id="@+id/nombreLabel"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Nombre:"
-                            android:textSize="16sp"
-                            android:textStyle="bold" />
+                <!-- Teléfono -->
+                <TableRow>
+                    <TextView
+                        android:id="@+id/telefonoLabel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Teléfono:"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+                    <TextView
+                        android:id="@+id/telefonoValue"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="16sp" />
+                </TableRow>
 
-                        <TextView
-                            android:id="@+id/nombreValue"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="John Doe"
-                            android:textSize="16sp" />
-                    </TableRow>
+                <!-- Dirección -->
+                <TableRow>
+                    <TextView
+                        android:id="@+id/direccionLabel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Dirección:"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+                    <TextView
+                        android:id="@+id/direccionValue"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="16sp" />
+                </TableRow>
 
-                    <TableRow>
+                <!-- Correo Electrónico -->
+                <TableRow>
+                    <TextView
+                        android:id="@+id/correoLabel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Correo:"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+                    <TextView
+                        android:id="@+id/correoValue"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="16sp" />
+                </TableRow>
 
-                        <TextView
-                            android:id="@+id/apellidoLabel"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Apellido:"
-                            android:textSize="16sp"
-                            android:textStyle="bold" />
+                <!-- Fecha de Nacimiento -->
+                <TableRow>
+                    <TextView
+                        android:id="@+id/fechaNacimientoLabel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Fecha de Nacimiento:"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+                    <TextView
+                        android:id="@+id/fechaNacimientoValue"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="16sp" />
+                </TableRow>
 
-                        <TextView
-                            android:id="@+id/apellidoValue"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Smith"
-                            android:textSize="16sp" />
-                    </TableRow>
+                <!-- Fecha de Ingreso -->
+                <TableRow>
+                    <TextView
+                        android:id="@+id/fechaIngresoLabel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Fecha de Ingreso:"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+                    <TextView
+                        android:id="@+id/fechaIngresoValue"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="16sp" />
+                </TableRow>
 
-                    <TableRow>
-
-                        <TextView
-                            android:id="@+id/identificacionLabel"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Identificación:"
-                            android:textSize="16sp"
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:id="@+id/identificacionValue"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="123456789"
-                            android:textSize="16sp" />
-
-                    </TableRow>
-
-                    <TableRow>
-
-                        <TextView
-                            android:id="@+id/direccionLabel"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Dirección:"
-                            android:textSize="16sp"
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:id="@+id/direccionValue"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Calle 123"
-                            android:textSize="16sp" />
-
-                    </TableRow>
-
-                    <TableRow>
-
-                        <TextView
-                            android:id="@+id/telefonoLabel"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Teléfono:"
-                            android:textSize="16sp"
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:id="@+id/telefonoValue"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="1234567"
-                            android:textSize="16sp" />
-
-                    </TableRow>
-
-                    <TableRow>
-
-                        <TextView
-                            android:id="@+id/correoLabel"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Correo:"
-                            android:textSize="16sp"
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:id="@+id/correoValue"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="johndoe@test.com"
-                            android:textSize="16sp" />
-
-                    </TableRow>
-
-                    <TableRow>
-
-                        <TextView
-                            android:id="@+id/fechaContratacionLabel"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Fecha de Contratación:"
-                            android:textSize="16sp"
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:id="@+id/fechaContratacionValue"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="01/01/2021"
-                            android:textSize="16sp" />
-
-                    </TableRow>
-
-                </TableLayout>
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
+            </TableLayout>
         </LinearLayout>
-
     </androidx.cardview.widget.CardView>
-
 </LinearLayout>
