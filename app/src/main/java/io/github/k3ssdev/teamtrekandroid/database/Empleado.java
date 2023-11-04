@@ -5,16 +5,16 @@ import java.util.Date;
 public class Empleado {
     private int ID;
     private String nombre;
-    private Date fechaIngreso; // Usamos Date para manejar la fecha de ingreso
+    private Date fechaIngreso;
     private String nombreDepartamento;
     private String descripcionHorario;
-    private Date horaInicio; // Usamos Date para manejar la hora de inicio
-    private Date horaFin; // Usamos Date para manejar la hora de fin
-    private String usuario; // Esto correspondería a 'u.Usuario'
+    private Date horaInicio;
+    private Date horaFin;
+    private String usuario;
     private String telefono;
     private String direccion;
     private String email;
-    private Date fechaNacimiento; // Usamos Date para la fecha de nacimiento
+    private Date fechaNacimiento;
     private String nif;
 
     // Constructor con todos los campos

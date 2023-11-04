@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.widget.Toast;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -41,71 +42,85 @@ public class DatabaseHandler {
     public class ValidarUsuario extends AsyncTask<String, Void, String[]> {
         @Override
         protected String[] doInBackground(String... params) {
-            String usuario_apr = params[0];
-            String contrasena_apr = params[1];
-            //String urlString_apr = "http://192.168.1.227/validacuenta.php"; // IP del servidor XAMPP
-            String urlString_apr = "http://10.0.2.2/teamtrek/validacuenta.php"; // localhost para el emulador
+            String usuario = params[0];
+            String contrasena = params[1];
+            //String urlString = "http://192.168.1.227/validacuenta.php"; // IP del servidor XAMPP
+            String urlString = "http://10.0.2.2/teamtrek/validacuenta.php"; // localhost para el emulador
 
-            String resultado_apr = null;
+            String resultado = null;
 
             try {
                 // Crear la conexión HTTP
-                URL url_apr = new URL(urlString_apr);
-                HttpURLConnection conexion_apr = (HttpURLConnection) url_apr.openConnection();
-                conexion_apr.setRequestMethod("POST");
-                conexion_apr.setDoOutput(true);
+                URL url = new URL(urlString);
+                HttpURLConnection conexion = (HttpURLConnection) url.openConnection();
+                conexion.setRequestMethod("POST");
+                conexion.setDoOutput(true);
 
                 // Agrega el token como cabecera a la solicitud, COMENTAR ESTA LÍNEA PARA PROBAR LA APP EN SERVER PROPIO
                 //conexion.setRequestProperty("Authorization", "Bearer " + token);
 
                 // Crear los datos del formulario
-                String datos_apr = "usuario=" + URLEncoder.encode(usuario_apr, "UTF-8") + "&contrasena=" + URLEncoder.encode(contrasena_apr, "UTF-8");
+                String datos = "usuario=" + URLEncoder.encode(usuario, "UTF-8") + "&contrasena=" + URLEncoder.encode(contrasena, "UTF-8");
 
                 // Escribir los datos en el cuerpo de la petición
-                OutputStream outputStream_apr = conexion_apr.getOutputStream();
-                outputStream_apr.write(datos_apr.getBytes(StandardCharsets.UTF_8));
-                outputStream_apr.flush();
-                outputStream_apr.close();
+                OutputStream outputStream = conexion.getOutputStream();
+                outputStream.write(datos.getBytes(StandardCharsets.UTF_8));
+                outputStream.flush();
+                outputStream.close();
 
                 // Leer la respuesta del servidor
-                InputStream entrada_apr = conexion_apr.getInputStream();
-                BufferedReader lector_apr = new BufferedReader(new InputStreamReader(entrada_apr));
-                StringBuilder respuesta_apr = new StringBuilder();
+                InputStream entrada = conexion.getInputStream();
+                BufferedReader lector = new BufferedReader(new InputStreamReader(entrada));
+                StringBuilder respuesta = new StringBuilder();
                 String linea;
-                while ((linea = lector_apr.readLine()) != null) {
-                    respuesta_apr.append(linea);
+                while ((linea = lector.readLine()) != null) {
+                    respuesta.append(linea);
                 }
 
                 // Cerrar la conexión HTTP
-                entrada_apr.close();
-                conexion_apr.disconnect();
+                entrada.close();
+                conexion.disconnect();
 
                 // Procesar la respuesta del servidor
-                resultado_apr = respuesta_apr.toString();
+                resultado = respuesta.toString();
 
                 // Parsear la respuesta XML
-                Document document = XMLParser.convertStringToXMLDocument(resultado_apr);
+                Document document = XMLParser.convertStringToXMLDocument(resultado);
+
+                // Inicializar el ID del empleado como una cadena vacía
+                String empleadoID = "";
 
                 // Obtener el contenido del elemento "estado"
                 NodeList estadoNodes = document.getElementsByTagName("estado");
                 if (estadoNodes.getLength() > 0) {
-                    Node estadoNode_apr = estadoNodes.item(0);
-                    String estado_apr = estadoNode_apr.getTextContent();
+                    Node estadoNode = estadoNodes.item(0);
+                    String estado = estadoNode.getTextContent();
 
-                    // Asignar el resultado a la variable resultado_apr
-                    resultado_apr = estado_apr;
+                    // Asignar el resultado a la variable resultado
+                    resultado = estado;
+
+                    // Si el estado es "ok", intentar obtener el ID del empleado
+                    if ("ok".equals(estado)) {
+                        NodeList idNodes = document.getElementsByTagName("EmpleadoID");
+                        if (idNodes.getLength() > 0) {
+                            Node idNode = idNodes.item(0);
+                            empleadoID = idNode.getTextContent();
+                        }
+                    }
                 } else {
                     // Manejar el caso en el que no se pueda encontrar el elemento "estado"
-                    resultado_apr = null;
+                    resultado = null;
                 }
 
                 // Crear un array para guardar el resultado, el usuario y la contraseña
-                String[] resultadoYDatos_apr = new String[3];
-                resultadoYDatos_apr[0] = resultado_apr; // Resultado de la validación
-                resultadoYDatos_apr[1] = usuario_apr;    // Nombre de usuario
-                resultadoYDatos_apr[2] = contrasena_apr;  // Contraseña
+                String[] resultadoYDatos = new String[4];
+                resultadoYDatos[0] = resultado;   // Resultado de la validación
+                resultadoYDatos[1] = usuario;     // Nombre de usuario
+                resultadoYDatos[2] = contrasena;  // Contraseña
+                resultadoYDatos[3] = empleadoID;  // ID del empleado
 
-                return resultadoYDatos_apr; // Devuelve el array
+
+                return resultadoYDatos; // Devuelve el array
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -116,32 +131,33 @@ public class DatabaseHandler {
         @Override
         protected void onPostExecute(String[] resultadoYDatos) {
             if (resultadoYDatos != null) {
-                String resultado_apr = resultadoYDatos[0]; // Resultado de la validación
-                String usuario_apr = resultadoYDatos[1]; // Nombre de usuario
-                String contrasena_apr = resultadoYDatos[2]; // Contraseña
+                String resultado = resultadoYDatos[0]; // Resultado de la validación
+                String usuario = resultadoYDatos[1]; // Nombre de usuario
+                String contrasena = resultadoYDatos[2]; // Contraseña
+                String empleadoID = resultadoYDatos[3]; // ID del empleado
 
                 // Verifica el resultado y realiza las acciones necesarias
-                if (resultado_apr.equals("ok")) {
+                if (resultado.equals("ok")) {
                     // El resultado es "ok", abre la segunda actividad
                     Intent intent = new Intent(activity, MainActivity.class);
 
                     //Pasar el nombre de usuario a la actividad principal
-                    intent.putExtra(EXTRA_MESSAGE, usuario_apr);
+                    intent.putExtra(EXTRA_MESSAGE, usuario);
 
                     activity.startActivity(intent);
 
 
-                } else if (resultado_apr.equals("ko")) {
+                } else if (resultado.equals("ko")) {
                     // El resultado es "ko", realiza otra acción
                     Toast.makeText(activity, "Usuario/Contraseña incorrectos", Toast.LENGTH_SHORT).show();
-                    //SQLiteHandler sqLiteHandler_apr = new SQLiteHandler(activity_apr);
+                    //SQLiteHandler sqLiteHandler = new SQLiteHandler(activity\);
 
                     // Insertar registro en la base de datos
-                    //sqLiteHandler_apr.insertarRegistro(usuario_apr, contrasena_apr);
+                    //sqLiteHandler\.insertarRegistro(usuario\, contrasena\);
 
                     // Abrir LogActivity
-                    //Intent intent_apr = new Intent(activity_apr, LogActivity.class);
-                    //activity_apr.startActivity(intent_apr);
+                    //Intent intent\ = new Intent(activity\, LogActivity.class);
+                    //activity\.startActivity(intent\);
                 }
             } else {
                 // El resultado es null, hubo un error en la petición
@@ -161,6 +177,7 @@ public class DatabaseHandler {
         public ConsultarEmpleadoTask(ConsultarEmpleadoCallback callback) {
             this.callback = callback;
         }
+
         @Override
         protected List<Empleado> doInBackground(String... params) {
             String urlString = "http://10.0.2.2/teamtrek/consultaempleados.php"; // Cambia esto a tu URL
@@ -170,6 +187,12 @@ public class DatabaseHandler {
                 try {
                     String username = params[0];
                     urlString += "?username=" + URLEncoder.encode(username, "UTF-8");
+                    // Ensure you have at least two elements in params before trying to access the second one
+                    if (params.length > 1 && params[1] != null && !params[1].isEmpty()) {
+                        String EmpleadoID = params[1];
+                        // Include the EmployeeID in the URL if necessary
+                        urlString += "&EmpleadoID=" + URLEncoder.encode(EmpleadoID, "UTF-8");
+                    }
                 } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
                 }
@@ -260,5 +283,5 @@ public class DatabaseHandler {
         }
 
 
-}
+    }
 }
