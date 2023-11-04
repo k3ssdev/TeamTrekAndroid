@@ -36,13 +36,13 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="ID:"
-                        android:textSize="16sp"
+                        android:textSize="13sp"
                         android:textStyle="bold" />
                     <TextView
                         android:id="@+id/idValue"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="16sp" />
+                        android:textSize="13sp" />
                 </TableRow>
 
                 <!-- Nombre -->
@@ -52,13 +52,13 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Nombre:"
-                        android:textSize="16sp"
+                        android:textSize="13sp"
                         android:textStyle="bold" />
                     <TextView
                         android:id="@+id/nombreValue"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="16sp" />
+                        android:textSize="13sp" />
                 </TableRow>
 
                 <!-- Departamento -->
@@ -68,13 +68,13 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Departamento:"
-                        android:textSize="16sp"
+                        android:textSize="13sp"
                         android:textStyle="bold" />
                     <TextView
                         android:id="@+id/departamentoValue"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="16sp" />
+                        android:textSize="13sp" />
                 </TableRow>
 
                 <!-- Descripción Horario -->
@@ -84,13 +84,13 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Horario:"
-                        android:textSize="16sp"
+                        android:textSize="13sp"
                         android:textStyle="bold" />
                     <TextView
                         android:id="@+id/horarioValue"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="16sp" />
+                        android:textSize="13sp" />
                 </TableRow>
 
                 <!-- Usuario -->
@@ -100,13 +100,13 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Usuario:"
-                        android:textSize="16sp"
+                        android:textSize="13sp"
                         android:textStyle="bold" />
                     <TextView
                         android:id="@+id/usuarioValue"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="16sp" />
+                        android:textSize="13sp" />
                 </TableRow>
 
                 <!-- Teléfono -->
@@ -116,13 +116,13 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Teléfono:"
-                        android:textSize="16sp"
+                        android:textSize="13sp"
                         android:textStyle="bold" />
                     <TextView
                         android:id="@+id/telefonoValue"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="16sp" />
+                        android:textSize="13sp" />
                 </TableRow>
 
                 <!-- Dirección -->
@@ -132,13 +132,13 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Dirección:"
-                        android:textSize="16sp"
+                        android:textSize="13sp"
                         android:textStyle="bold" />
                     <TextView
                         android:id="@+id/direccionValue"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="16sp" />
+                        android:textSize="13sp" />
                 </TableRow>
 
                 <!-- Correo Electrónico -->
@@ -148,13 +148,13 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Correo:"
-                        android:textSize="16sp"
+                        android:textSize="13sp"
                         android:textStyle="bold" />
                     <TextView
                         android:id="@+id/correoValue"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="16sp" />
+                        android:textSize="13sp" />
                 </TableRow>
 
                 <!-- Fecha de Nacimiento -->
@@ -164,13 +164,13 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Fecha de Nacimiento:"
-                        android:textSize="16sp"
+                        android:textSize="13sp"
                         android:textStyle="bold" />
                     <TextView
                         android:id="@+id/fechaNacimientoValue"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="16sp" />
+                        android:textSize="13sp" />
                 </TableRow>
 
                 <!-- Fecha de Ingreso -->
@@ -180,13 +180,13 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Fecha de Ingreso:"
-                        android:textSize="16sp"
+                        android:textSize="13sp"
                         android:textStyle="bold" />
                     <TextView
                         android:id="@+id/fechaIngresoValue"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="16sp" />
+                        android:textSize="13sp" />
                 </TableRow>
 
             </TableLayout>
