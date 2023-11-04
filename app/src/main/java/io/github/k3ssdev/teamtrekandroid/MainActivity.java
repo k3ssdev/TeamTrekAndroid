@@ -3,6 +3,7 @@ package io.github.k3ssdev.teamtrekandroid;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
+import android.widget.TextView;
 
 import com.google.android.material.navigation.NavigationView;
 
@@ -14,7 +15,10 @@ import androidx.navigation.ui.NavigationUI;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.util.List;
+
 import io.github.k3ssdev.teamtrekandroid.database.DatabaseHandler;
+import io.github.k3ssdev.teamtrekandroid.database.Empleado;
 import io.github.k3ssdev.teamtrekandroid.databinding.ActivityMainBinding;
 
 public class MainActivity extends AppCompatActivity {
@@ -55,7 +59,25 @@ public class MainActivity extends AppCompatActivity {
         // Inicializar el SharedViewModel y seleccionar el nombre de usuario como dato actual
         SharedViewModel sharedViewModel = new ViewModelProvider(this).get(SharedViewModel.class);
         sharedViewModel.select(userId);
+
+        // Obtener datos del empleado y actualizar el nav_header_main
+        new DatabaseHandler.ConsultarEmpleadoTask(new DatabaseHandler.ConsultarEmpleadoCallback() {
+            @Override
+            public void onConsultaCompletada(List<Empleado> resultado) {
+                if (!resultado.isEmpty()) {
+                    // Obtiene el primer empleado (en caso de que haya más de uno, ajusta según tu lógica)
+                    Empleado empleado = resultado.get(0);
+                    // Actualiza el nombre y el correo del empleado en el nav_header_main
+                    TextView employeeNameTextView = (TextView) binding.navView.getHeaderView(0).findViewById(R.id.nav_employee_name);
+                    TextView employeeEmailTextView = (TextView) binding.navView.getHeaderView(0).findViewById(R.id.nav_employee_email);
+                    employeeNameTextView.setText(empleado.getNombre());
+                    employeeEmailTextView.setText(empleado.getEmail());
+                }
+            }
+        }).execute(userId);
+
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
