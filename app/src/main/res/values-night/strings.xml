@@ -28,4 +28,7 @@
     <string name="direccionLabel">Dirección:</string>
     <string name="telefonoLabel">Teléfono:</string>
     <string name="correoLabel">Correo:</string>
+    <string name="nombre_del_usuario">Nombre del Usuario</string>
+    <string name="puesto_del_usuario">Puesto del Usuario</string>
+    <string name="departamento_del_usuario">Departamento del Usuario</string>
 </resources>

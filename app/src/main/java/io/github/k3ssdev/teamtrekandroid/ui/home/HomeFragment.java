@@ -42,9 +42,9 @@ public class HomeFragment extends Fragment {
                     if (!resultado.isEmpty()) {
                         // Obtiene el primer empleado (en caso de que haya más de uno, ajusta según tu lógica)
                         Empleado empleado = resultado.get(0);
-                        binding.nombreUsuario.setText(empleado.getUsuario());
-                        //binding.puestoUsuario.setText(empleado.getPuesto());
-                        // Haz lo mismo con los otros TextViews
+                        binding.nombreUsuario.setText(empleado.getNombre());
+                        binding.departamentoUsuario.setText(empleado.getNombreDepartamento());
+                        binding.emailUsuario.setText(empleado.getEmail());
                     }
                 }
             }).execute(username);
