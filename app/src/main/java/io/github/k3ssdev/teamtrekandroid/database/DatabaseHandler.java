@@ -133,16 +133,18 @@ public class DatabaseHandler {
             if (resultadoYDatos != null) {
                 String resultado = resultadoYDatos[0]; // Resultado de la validación
                 String usuario = resultadoYDatos[1]; // Nombre de usuario
-                String contrasena = resultadoYDatos[2]; // Contraseña
+                String contrasena = resultadoYDatos[2]; // Contraseña (assuming you need to pass this too)
                 String empleadoID = resultadoYDatos[3]; // ID del empleado
 
                 // Verifica el resultado y realiza las acciones necesarias
-                if (resultado.equals("ok")) {
+                if ("ok".equals(resultado)) {
                     // El resultado es "ok", abre la segunda actividad
                     Intent intent = new Intent(activity, MainActivity.class);
 
-                    //Pasar el nombre de usuario a la actividad principal
-                    intent.putExtra(EXTRA_MESSAGE, usuario);
+                    // Pasar el nombre de usuario y el ID del empleado a la actividad principal
+                    //intent.putExtra("EXTRA_USUARIO", usuario);
+                    intent.putExtra(EXTRA_MESSAGE, empleadoID);
+
 
                     activity.startActivity(intent);
 
@@ -185,14 +187,10 @@ public class DatabaseHandler {
             // Añade el parámetro de nombre de usuario a la URL si se ha proporcionado uno
             if (params != null && params.length > 0 && params[0] != null && !params[0].isEmpty()) {
                 try {
-                    String username = params[0];
-                    urlString += "?username=" + URLEncoder.encode(username, "UTF-8");
-                    // Ensure you have at least two elements in params before trying to access the second one
-                    if (params.length > 1 && params[1] != null && !params[1].isEmpty()) {
-                        String EmpleadoID = params[1];
-                        // Include the EmployeeID in the URL if necessary
-                        urlString += "&EmpleadoID=" + URLEncoder.encode(EmpleadoID, "UTF-8");
-                    }
+                    String userid = params[0];
+
+                    urlString += "?userid=" + URLEncoder.encode(userid, "UTF-8");
+
                 } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
                 }

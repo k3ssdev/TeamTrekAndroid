@@ -50,11 +50,11 @@ public class MainActivity extends AppCompatActivity {
 
         // Obtener el intent y el nombre de usuario pasado desde LoginActivity
         Intent intent = getIntent();
-        String username = intent.getStringExtra(DatabaseHandler.EXTRA_MESSAGE);
+        String userId = intent.getStringExtra(DatabaseHandler.EXTRA_MESSAGE);
 
         // Inicializar el SharedViewModel y seleccionar el nombre de usuario como dato actual
         SharedViewModel sharedViewModel = new ViewModelProvider(this).get(SharedViewModel.class);
-        sharedViewModel.select(username);
+        sharedViewModel.select(userId);
     }
 
     @Override
