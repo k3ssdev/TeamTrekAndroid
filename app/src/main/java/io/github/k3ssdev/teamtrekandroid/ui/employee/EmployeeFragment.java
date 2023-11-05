@@ -8,10 +8,12 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
 import java.util.ArrayList;
 import java.util.List;
 import io.github.k3ssdev.teamtrekandroid.R;
+import io.github.k3ssdev.teamtrekandroid.SharedViewModel;
 import io.github.k3ssdev.teamtrekandroid.database.DatabaseHandler;
 import io.github.k3ssdev.teamtrekandroid.database.Empleado;
 import io.github.k3ssdev.teamtrekandroid.database.EmployeeAdapter;
@@ -26,8 +28,12 @@ public class EmployeeFragment extends Fragment {
 
         ListView listView = rootView.findViewById(R.id.listView);
 
+        SharedViewModel sharedViewModel = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
+
+
+
         // Configura el adaptador
-        List<Empleado> empleadoList = getEmployeeDataFromDatabase();
+        List<Empleado> empleadoList = getEmployeeDataFromDatabase(sharedViewModel.getSelected().getValue());
 
         if (empleadoList != null && !empleadoList.isEmpty()) {
             EmployeeAdapter employeeAdapter = new EmployeeAdapter(requireContext(), empleadoList);
@@ -38,10 +44,13 @@ public class EmployeeFragment extends Fragment {
 
         // Resto del código de tu fragment
 
+
+
+
         return rootView;
     }
 
-    private List<Empleado> getEmployeeDataFromDatabase() {
+    private List<Empleado> getEmployeeDataFromDatabase(String username) {
         DatabaseHandler.ConsultarEmpleadoTask consultarEmpleadoTask = new DatabaseHandler.ConsultarEmpleadoTask(new DatabaseHandler.ConsultarEmpleadoCallback() {
             @Override
             public void onConsultaCompletada(List<Empleado> resultado) {
@@ -53,7 +62,7 @@ public class EmployeeFragment extends Fragment {
         });
 
         try {
-            return consultarEmpleadoTask.execute().get();
+            return consultarEmpleadoTask.execute(username).get();
         } catch (Exception e) {
             e.printStackTrace();
         }

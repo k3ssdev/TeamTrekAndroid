@@ -13,97 +13,108 @@ try {
     // Verificar si se ha proporcionado un ID de empleado en la solicitud
     $userId = isset($_GET['userid']) ? $_GET['userid'] : null;
 
-    if ($userId) {
-        // Filtrar el ID de usuario para prevenir inyección SQL
-        $userId = filter_var($userId, FILTER_SANITIZE_NUMBER_INT);
-        
-        // Consulta SQL parametrizada para obtener toda la información del empleado por su ID
-        $sql = "SELECT 
-		    e.ID, 
-		    e.Nombre, 
-		    e.FechaIngreso, 
-		    d.Nombre AS NombreDepartamento, 
-		    h.Descripcion AS DescripcionHorario, 
-		    h.HoraInicio, 
-		    h.HoraFin, 
-		    u.Usuario, 
-		    GROUP_CONCAT(r.Nombre SEPARATOR ', ') AS Roles,
-		    dp.Telefono,
-		    dp.Direccion,
-		    dp.Email,
-		    dp.FechaNacimiento,
-		    dp.NIF
-		FROM 
-		    Empleados e
-		    LEFT JOIN Departamentos d ON e.DepartamentoID = d.ID
-		    LEFT JOIN EmpleadoHorario eh ON e.ID = eh.EmpleadoID
-		    LEFT JOIN Horarios h ON eh.HorarioID = h.ID
-		    LEFT JOIN Usuarios u ON e.ID = u.EmpleadoID
-		    LEFT JOIN UsuarioRoles ur ON u.EmpleadoID = ur.UsuarioID
-		    LEFT JOIN Roles r ON ur.RolID = r.ID
-		    LEFT JOIN DatosPersonales dp ON e.ID = dp.EmpleadoID
-		WHERE e.ID = :userId
-		GROUP BY 
-		    e.ID, 
-		    e.Nombre, 
-		    e.FechaIngreso, 
-		    d.Nombre, 
-		    h.Descripcion, 
-		    h.HoraInicio, 
-		    h.HoraFin, 
-		    u.Usuario,
-		    dp.Telefono,
-		    dp.Direccion,
-		    dp.Email,
-		    dp.FechaNacimiento,
-		    dp.NIF";
-        $stmt = $conn->prepare($sql);
-        $stmt->bindParam(':userId', $userId, PDO::PARAM_INT);
+    
+    // Comprobar si el usuario es administrador
+    $stmt = $conn->prepare("SELECT GROUP_CONCAT(r.Nombre SEPARATOR ', ') AS Roles FROM Usuarios u LEFT JOIN UsuarioRoles ur ON u.EmpleadoID = ur.UsuarioID LEFT JOIN Roles r ON ur.RolID = r.ID WHERE u.EmpleadoID = :userId");
+    $stmt->bindParam(':userId', $userId, PDO::PARAM_INT);
+    $stmt->execute();
+
+    $userRoles = $stmt->fetch(PDO::FETCH_ASSOC);
+    $isAdmin = strpos($userRoles['Roles'], 'Administrador') !== false;
+
+    if ($isAdmin) {
+        // Usuario es administrador, puede obtener todos los empleados
+         $sql = "SELECT 
+            e.ID, 
+            e.Nombre, 
+            e.FechaIngreso, 
+            d.Nombre AS NombreDepartamento, 
+            h.Descripcion AS DescripcionHorario, 
+            h.HoraInicio, 
+            h.HoraFin, 
+            u.Usuario, 
+            GROUP_CONCAT(r.Nombre SEPARATOR ', ') AS Roles,
+            dp.Telefono,
+            dp.Direccion,
+            dp.Email,
+            dp.FechaNacimiento,
+            dp.NIF
+        FROM 
+            Empleados e
+            LEFT JOIN Departamentos d ON e.DepartamentoID = d.ID
+            LEFT JOIN EmpleadoHorario eh ON e.ID = eh.EmpleadoID
+            LEFT JOIN Horarios h ON eh.HorarioID = h.ID
+            LEFT JOIN Usuarios u ON e.ID = u.EmpleadoID
+            LEFT JOIN UsuarioRoles ur ON u.EmpleadoID = ur.UsuarioID
+            LEFT JOIN Roles r ON ur.RolID = r.ID
+            LEFT JOIN DatosPersonales dp ON e.ID = dp.EmpleadoID
+        GROUP BY 
+            e.ID, 
+            e.Nombre, 
+            e.FechaIngreso, 
+            d.Nombre, 
+            h.Descripcion, 
+            h.HoraInicio, 
+            h.HoraFin, 
+            u.Usuario,
+            dp.Telefono,
+            dp.Direccion,
+            dp.Email,
+            dp.FechaNacimiento,
+            dp.NIF";
     } else {
-        // Consulta SQL para obtener todos los empleados
-        $sql = "SELECT 
-		    e.ID, 
-		    e.Nombre, 
-		    e.FechaIngreso, 
-		    d.Nombre AS NombreDepartamento, 
-		    h.Descripcion AS DescripcionHorario, 
-		    h.HoraInicio, 
-		    h.HoraFin, 
-		    u.Usuario, 
-		    GROUP_CONCAT(r.Nombre SEPARATOR ', ') AS Roles,
-		    dp.Telefono,
-		    dp.Direccion,
-		    dp.Email,
-		    dp.FechaNacimiento,
-		    dp.NIF
-		FROM 
-		    Empleados e
-		    LEFT JOIN Departamentos d ON e.DepartamentoID = d.ID
-		    LEFT JOIN EmpleadoHorario eh ON e.ID = eh.EmpleadoID
-		    LEFT JOIN Horarios h ON eh.HorarioID = h.ID
-		    LEFT JOIN Usuarios u ON e.ID = u.EmpleadoID
-		    LEFT JOIN UsuarioRoles ur ON u.EmpleadoID = ur.UsuarioID
-		    LEFT JOIN Roles r ON ur.RolID = r.ID
-		    LEFT JOIN DatosPersonales dp ON e.ID = dp.EmpleadoID
-		GROUP BY 
-		    e.ID, 
-		    e.Nombre, 
-		    e.FechaIngreso, 
-		    d.Nombre, 
-		    h.Descripcion, 
-		    h.HoraInicio, 
-		    h.HoraFin, 
-		    u.Usuario,
-		    dp.Telefono,
-		    dp.Direccion,
-		    dp.Email,
-		    dp.FechaNacimiento,
-		    dp.NIF";
-        $stmt = $conn->prepare($sql);
+        // Usuario no es administrador, solo puede ver su propia información
+        $userId = filter_var($userId, FILTER_SANITIZE_NUMBER_INT);
+
+                $sql = "SELECT 
+            e.ID, 
+            e.Nombre, 
+            e.FechaIngreso, 
+            d.Nombre AS NombreDepartamento, 
+            h.Descripcion AS DescripcionHorario, 
+            h.HoraInicio, 
+            h.HoraFin, 
+            u.Usuario, 
+            GROUP_CONCAT(r.Nombre SEPARATOR ', ') AS Roles,
+            dp.Telefono,
+            dp.Direccion,
+            dp.Email,
+            dp.FechaNacimiento,
+            dp.NIF
+        FROM 
+            Empleados e
+            LEFT JOIN Departamentos d ON e.DepartamentoID = d.ID
+            LEFT JOIN EmpleadoHorario eh ON e.ID = eh.EmpleadoID
+            LEFT JOIN Horarios h ON eh.HorarioID = h.ID
+            LEFT JOIN Usuarios u ON e.ID = u.EmpleadoID
+            LEFT JOIN UsuarioRoles ur ON u.EmpleadoID = ur.UsuarioID
+            LEFT JOIN Roles r ON ur.RolID = r.ID
+            LEFT JOIN DatosPersonales dp ON e.ID = dp.EmpleadoID
+        WHERE e.ID = :userId
+        GROUP BY 
+            e.ID, 
+            e.Nombre, 
+            e.FechaIngreso, 
+            d.Nombre, 
+            h.Descripcion, 
+            h.HoraInicio, 
+            h.HoraFin, 
+            u.Usuario,
+            dp.Telefono,
+            dp.Direccion,
+            dp.Email,
+            dp.FechaNacimiento,
+            dp.NIF";
     }
 
-    // Ejecutar la consulta
-    $stmt->execute();
+    $stmt = $conn->prepare($sql);
+
+    // Si no es administrador, enlazar userId a la consulta
+    if (!$isAdmin) {
+        $stmt->bindParam(':userId', $userId, PDO::PARAM_INT);
+    }
+
+    $stmt->execute(); // Ejecutar la consulta
 
     // Crear el documento XML de respuesta
     header('Content-Type: text/xml');
