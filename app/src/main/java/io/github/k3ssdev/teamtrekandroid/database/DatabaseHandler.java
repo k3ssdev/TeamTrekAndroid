@@ -155,7 +155,7 @@ public class DatabaseHandler {
         protected JSONObject doInBackground(String... strings) {
             String empleadoID = strings[0];
             try {
-                URL url = new URL("http://10.0.2.2/teamtrek/consultaempleados_jwt.php?userid=" + empleadoID);
+                URL url = new URL("http://10.0.2.2/teamtrek/consultaempleados_jwt2.php" ); // ?userid=" + empleadoID);
                 HttpURLConnection connection = (HttpURLConnection) url.openConnection();
                 connection.setRequestMethod("GET");
                 connection.setRequestProperty("Authorization", "Bearer " + jwtToken);
@@ -214,5 +214,4 @@ public class DatabaseHandler {
 
     // Otros métodos relacionados con XML
 
-    // Aquí añadirías cualquier otra lógica necesaria para manejar la base de datos
 }
