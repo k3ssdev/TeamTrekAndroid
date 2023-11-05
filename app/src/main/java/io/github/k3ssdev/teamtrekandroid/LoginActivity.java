@@ -21,6 +21,14 @@ public class LoginActivity extends AppCompatActivity {
         // Establecer el layout correspondiente a la actividad de inicio de sesión.
         setContentView(R.layout.login_activity);
 
+        // Supongamos que tienes un botón en tu login_activity layout para abrir Settings
+        Button settingsButton = findViewById(R.id.settingsButton);
+        settingsButton.setOnClickListener(v -> {
+            // Abrir SettingsActivity
+            Intent intent = new Intent(LoginActivity.this, SettingsActivity.class);
+            startActivity(intent);
+        });
+
         // Obtener referencias a los elementos de la interfaz de usuario.
         EditText editTextUsername = findViewById(R.id.editTextUsername);
         EditText editTextPassword = findViewById(R.id.editTextPassword);
