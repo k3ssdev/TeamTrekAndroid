@@ -155,7 +155,7 @@ public class DatabaseHandler {
         protected JSONObject doInBackground(String... strings) {
             String empleadoID = strings[0];
             try {
-                URL url = new URL("http://10.0.2.2/teamtrek/consultaempleados_jwt1.php"); // ?userid=" + empleadoID);
+                URL url = new URL("http://10.0.2.2/teamtrek/consultaempleados_jwt.php"); // ?userid=" + empleadoID);
                 HttpURLConnection connection = (HttpURLConnection) url.openConnection();
                 connection.setRequestMethod("GET");
                 connection.setRequestProperty("Authorization", "Bearer " + jwtToken);
