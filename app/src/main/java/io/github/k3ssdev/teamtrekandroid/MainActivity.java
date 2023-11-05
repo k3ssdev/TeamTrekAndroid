@@ -61,20 +61,20 @@ public class MainActivity extends AppCompatActivity {
         sharedViewModel.select(userId);
 
         // Obtener datos del empleado y actualizar el nav_header_main
-        new DatabaseHandler.ConsultarEmpleadoTask(new DatabaseHandler.ConsultarEmpleadoCallback() {
-            @Override
-            public void onConsultaCompletada(List<Empleado> resultado) {
-                if (!resultado.isEmpty()) {
-                    // Obtiene el primer empleado (en caso de que haya más de uno, ajusta según tu lógica)
-                    Empleado empleado = resultado.get(0);
-                    // Actualiza el nombre y el correo del empleado en el nav_header_main
-                    TextView employeeNameTextView = (TextView) binding.navView.getHeaderView(0).findViewById(R.id.nav_employee_name);
-                    TextView employeeEmailTextView = (TextView) binding.navView.getHeaderView(0).findViewById(R.id.nav_employee_email);
-                    employeeNameTextView.setText(empleado.getNombre());
-                    employeeEmailTextView.setText(empleado.getEmail());
-                }
-            }
-        }).execute(userId);
+//        new DatabaseHandler.ConsultarEmpleadoTask(new DatabaseHandler.ConsultarEmpleadoCallback() {
+//            @Override
+//            public void onConsultaCompletada(List<Empleado> resultado) {
+//                if (!resultado.isEmpty()) {
+//                    // Obtiene el primer empleado (en caso de que haya más de uno, ajusta según tu lógica)
+//                    Empleado empleado = resultado.get(0);
+//                    // Actualiza el nombre y el correo del empleado en el nav_header_main
+//                    TextView employeeNameTextView = (TextView) binding.navView.getHeaderView(0).findViewById(R.id.nav_employee_name);
+//                    TextView employeeEmailTextView = (TextView) binding.navView.getHeaderView(0).findViewById(R.id.nav_employee_email);
+//                    employeeNameTextView.setText(empleado.getNombre());
+//                    employeeEmailTextView.setText(empleado.getEmail());
+//                }
+//            }
+//        }).execute(userId);
 
     }
 

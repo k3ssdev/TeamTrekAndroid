@@ -26,37 +26,38 @@ public class EmployeeFragment extends Fragment {
 
         ListView listView = rootView.findViewById(R.id.listView);
 
-        // Configura el adaptador
-        List<Empleado> empleadoList = getEmployeeDataFromDatabase();
+//        // Configura el adaptador
+//        List<Empleado> empleadoList = getEmployeeDataFromDatabase();
+//
+//        if (empleadoList != null && !empleadoList.isEmpty()) {
+//            EmployeeAdapter employeeAdapter = new EmployeeAdapter(requireContext(), empleadoList);
+//            listView.setAdapter(employeeAdapter);
+//        } else {
+//            Log.d("EmployeeFragment", "La lista de empleados está vacía o nula.");
+//        }
+//
+//        // Resto del código de tu fragment
+//
+      return rootView;
+//    }
 
-        if (empleadoList != null && !empleadoList.isEmpty()) {
-            EmployeeAdapter employeeAdapter = new EmployeeAdapter(requireContext(), empleadoList);
-            listView.setAdapter(employeeAdapter);
-        } else {
-            Log.d("EmployeeFragment", "La lista de empleados está vacía o nula.");
-        }
-
-        // Resto del código de tu fragment
-
-        return rootView;
-    }
-
-    private List<Empleado> getEmployeeDataFromDatabase() {
-        DatabaseHandler.ConsultarEmpleadoTask consultarEmpleadoTask = new DatabaseHandler.ConsultarEmpleadoTask(new DatabaseHandler.ConsultarEmpleadoCallback() {
-            @Override
-            public void onConsultaCompletada(List<Empleado> resultado) {
-                // Asegúrate de que el fragment está todavía en el estado correcto
-                if (isAdded() && resultado != null && !resultado.isEmpty()) {
-                    employeeAdapter = new EmployeeAdapter(requireContext(), resultado);
-                }
-            }
-        });
-
-        try {
-            return consultarEmpleadoTask.execute().get();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return new ArrayList<>(); // Devolver una lista vacía en caso de error
+//    private List<Empleado> getEmployeeDataFromDatabase() {
+//        DatabaseHandler.ConsultarEmpleadoTask consultarEmpleadoTask = new DatabaseHandler.ConsultarEmpleadoTask(new DatabaseHandler.ConsultarEmpleadoCallback() {
+//            @Override
+//            public void onConsultaCompletada(List<Empleado> resultado) {
+//                // Asegúrate de que el fragment está todavía en el estado correcto
+//                if (isAdded() && resultado != null && !resultado.isEmpty()) {
+//                    employeeAdapter = new EmployeeAdapter(requireContext(), resultado);
+//                }
+//            }
+//        });
+//
+//        try {
+//            return consultarEmpleadoTask.execute().get();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        return new ArrayList<>(); // Devolver una lista vacía en caso de error
     }
 }
+

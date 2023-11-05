@@ -34,20 +34,20 @@ public class HomeFragment extends Fragment {
             Log.d("HomeFragment", "Username recibido: " + username);
 
             // Llama al AsyncTask para obtener los datos del empleado
-            new DatabaseHandler.ConsultarEmpleadoTask(new DatabaseHandler.ConsultarEmpleadoCallback() {
-                @Override
-                public void onConsultaCompletada(List<Empleado> resultado) {
-                    // Aquí actualizas tu UI con el resultado
-                    // Como es un ejemplo, solo actualizaré el nombre del empleado
-                    if (!resultado.isEmpty()) {
-                        // Obtiene el primer empleado (en caso de que haya más de uno, ajusta según tu lógica)
-                        Empleado empleado = resultado.get(0);
-                        binding.nombreUsuario.setText(empleado.getNombre());
-                        binding.departamentoUsuario.setText(empleado.getNombreDepartamento());
-                        binding.emailUsuario.setText(empleado.getEmail());
-                    }
-                }
-            }).execute(username);
+//            new DatabaseHandler.ConsultarEmpleadoTask(new DatabaseHandler.ConsultarEmpleadoCallback() {
+//                @Override
+//                public void onConsultaCompletada(List<Empleado> resultado) {
+//                    // Aquí actualizas tu UI con el resultado
+//                    // Como es un ejemplo, solo actualizaré el nombre del empleado
+//                    if (!resultado.isEmpty()) {
+//                        // Obtiene el primer empleado (en caso de que haya más de uno, ajusta según tu lógica)
+//                        Empleado empleado = resultado.get(0);
+//                        binding.nombreUsuario.setText(empleado.getNombre());
+//                        binding.departamentoUsuario.setText(empleado.getNombreDepartamento());
+//                        binding.emailUsuario.setText(empleado.getEmail());
+//                    }
+//                }
+//            }).execute(username);
         });
 
         return root;

@@ -32,6 +32,8 @@ public class DatabaseHandler {
 
     public interface ValidacionCallback {
         void onValidacionCompletada(boolean exito, String empleadoID, String mensaje);
+
+        void onError(String mensaje);
     }
 
     public interface ConsultaCallback {
@@ -80,15 +82,15 @@ public class DatabaseHandler {
             String usuario = strings[0];
             String contrasena = strings[1];
             try {
-                URL url = new URL("http://localhost/teamtrek/validacuenta.php");
+                URL url = new URL("http://10.0.2.2/teamtrek/validacuenta_jwt.php");
                 HttpURLConnection connection = (HttpURLConnection) url.openConnection();
                 connection.setRequestMethod("POST");
                 connection.setRequestProperty("Content-Type", "application/json");
                 connection.setDoOutput(true);
 
                 JSONObject authDetails = new JSONObject();
-                authDetails.put("username", usuario);
-                authDetails.put("password", contrasena);
+                authDetails.put("usuario", usuario);
+                authDetails.put("contrasena", contrasena);
 
                 OutputStreamWriter writer = new OutputStreamWriter(connection.getOutputStream());
                 writer.write(authDetails.toString());
@@ -153,7 +155,7 @@ public class DatabaseHandler {
         protected JSONObject doInBackground(String... strings) {
             String empleadoID = strings[0];
             try {
-                URL url = new URL("http://localhost/teamtrek/consultaempleados.php?userid=" + empleadoID);
+                URL url = new URL("http://10.0.2.2/teamtrek/consultaempleados_jwt.php?userid=" + empleadoID);
                 HttpURLConnection connection = (HttpURLConnection) url.openConnection();
                 connection.setRequestMethod("GET");
                 connection.setRequestProperty("Authorization", "Bearer " + jwtToken);

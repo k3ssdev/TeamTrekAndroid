@@ -37,27 +37,27 @@ public class CalendarFragment extends Fragment {
         sharedViewModel.getSelected().observe(getViewLifecycleOwner(), username -> {
             Log.d("HomeFragment", "Username recibido: " + username);
 
-            // Llama al AsyncTask para obtener los datos del empleado
-            new DatabaseHandler.ConsultarEmpleadoTask(new DatabaseHandler.ConsultarEmpleadoCallback() {
-                @Override
-                public void onConsultaCompletada(List<Empleado> resultado) {
-                    // Aquí actualizas tu UI con el resultado
-                    // Como es un ejemplo, solo actualizaré el nombre del empleado
-                    if (!resultado.isEmpty()) {
-                        // Obtiene el primer empleado (en caso de que haya más de uno, ajusta según tu lógica)
-                        Empleado empleado = resultado.get(0);
-                        binding.labelCalendar.setText(empleado.getNombre());
-                        binding.valueCalendar.setText(empleado.getDescripcionHorario());
-
-                        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", Locale.getDefault());
-
-                        String horaInicio = sdf.format(empleado.getHoraInicio());
-                        String horaFin = sdf.format(empleado.getHoraFin());
-
-                        binding.textTurno.setText(horaInicio + " - " + horaFin);
-                    }
-                }
-            }).execute(username);
+//            // Llama al AsyncTask para obtener los datos del empleado
+//            new DatabaseHandler.ConsultarEmpleadoTask(new DatabaseHandler.ConsultarEmpleadoCallback() {
+//                @Override
+//                public void onConsultaCompletada(List<Empleado> resultado) {
+//                    // Aquí actualizas tu UI con el resultado
+//                    // Como es un ejemplo, solo actualizaré el nombre del empleado
+//                    if (!resultado.isEmpty()) {
+//                        // Obtiene el primer empleado (en caso de que haya más de uno, ajusta según tu lógica)
+//                        Empleado empleado = resultado.get(0);
+//                        binding.labelCalendar.setText(empleado.getNombre());
+//                        binding.valueCalendar.setText(empleado.getDescripcionHorario());
+//
+//                        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", Locale.getDefault());
+//
+//                        String horaInicio = sdf.format(empleado.getHoraInicio());
+//                        String horaFin = sdf.format(empleado.getHoraFin());
+//
+//                        binding.textTurno.setText(horaInicio + " - " + horaFin);
+//                    }
+//                }
+//            }).execute(username);
         });
 
         return root;
