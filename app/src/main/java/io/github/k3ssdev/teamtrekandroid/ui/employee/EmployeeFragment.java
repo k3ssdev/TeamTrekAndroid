@@ -32,8 +32,6 @@ public class EmployeeFragment extends Fragment {
 
         SharedViewModel sharedViewModel = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
 
-
-
         // Configura el adaptador
         List<Empleado> empleadoList = getEmployeeDataFromDatabase(sharedViewModel.getSelected().getValue());
 
@@ -43,11 +41,6 @@ public class EmployeeFragment extends Fragment {
         } else {
             Log.d("EmployeeFragment", "La lista de empleados está vacía o nula.");
         }
-
-        // Resto del código de tu fragment
-
-
-
 
         return rootView;
     }
@@ -63,8 +56,6 @@ public class EmployeeFragment extends Fragment {
                 }
             }
         }, sharedPreferences);
-
-
 
         try {
             return consultarEmpleadoTask.execute(username).get();

@@ -29,6 +29,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -309,4 +310,116 @@ public class DatabaseHandler {
 
 
     }
+
+    public interface AvisosCallback {
+        void onAvisosCompletados(List<Avisos> resultado);
+    }
+
+    public static class AvisosTask extends AsyncTask<String, Void, List<Avisos>> {
+
+        private AvisosCallback callback;
+        private SharedPreferences sharedPreferences;
+
+        public AvisosTask(AvisosCallback callback, SharedPreferences sharedPreferences) {
+            this.callback = callback;
+            this.sharedPreferences = sharedPreferences; // Inicializar SharedPreferences
+        }
+
+        @Override
+        protected List<Avisos> doInBackground(String... params) {
+            //String urlString = "http://
+            String urlSettings = sharedPreferences.getString("pref_database_url", "http://10.0.2.2");
+            String token = sharedPreferences.getString("pref_token", "");
+
+            String urlString = urlSettings + "/teamtrek/avisos.php";
+
+            // Añade el parámetro de nombre de usuario a la URL si se ha proporcionado uno
+            if (params != null && params.length > 0 && params[0] != null && !params[0].isEmpty()) {
+                try {
+                    String userid = params[0];
+
+                    urlString += "?userid=" + URLEncoder.encode(userid, "UTF-8");
+
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            // Crea una lista vacía para guardar los avisos
+            List<Avisos> avisos = new ArrayList<>();
+
+            // Realiza la petición GET
+            try {
+                URL url = new URL(urlString);
+                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                connection.setRequestMethod("GET");
+
+                InputStream input = connection.getInputStream();
+                BufferedReader reader = new BufferedReader(new InputStreamReader(input));
+                StringBuilder response = new StringBuilder();
+                String line;
+
+                while ((line = reader.readLine()) != null) {
+                    response.append(line);
+                }
+
+                connection.disconnect();
+
+                String xmlString = response.toString();
+                DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+                DocumentBuilder builder = factory.newDocumentBuilder();
+                Document document = builder.parse(new InputSource(new StringReader(xmlString)));
+
+
+                NodeList avisosNodes = document.getElementsByTagName("aviso");
+
+                for (int i = 0; i < avisosNodes.getLength(); i++) {
+                    Node avisoNode = avisosNodes.item(i);
+                    if (avisoNode.getNodeType() == Node.ELEMENT_NODE) {
+                        Element avisoElement = (Element) avisoNode;
+
+                        //                        this.idAviso = idAviso;
+//                        this.titulo = titulo;
+//                        this.descripcion = descripcion;
+//                        this.fechaPublicacion = fechaPublicacion;
+//                        this.fechaExpiracion = fechaExpiracion;
+//                        this.autorId = autorId;
+//                        this.activo = activo;
+
+                        // Assuming 'avisoElement' is a Node from a NodeList obtained by your XML parser.
+                        Element identificacion = (Element) avisoElement; // You don't need to getElementsByTagName("aviso") here again.
+
+                        String idAviso = identificacion.getElementsByTagName("ID").item(0).getTextContent();
+                        String tituloAviso = identificacion.getElementsByTagName("Titulo").item(0).getTextContent();
+                        String descripcionAviso = identificacion.getElementsByTagName("Descripcion").item(0).getTextContent();
+
+                        String fechaPublicacionAviso = identificacion.getElementsByTagName("FechaPublicacion").item(0).getTextContent();
+                        String fechaExpiracionAviso = identificacion.getElementsByTagName("FechaExpiracion").item(0).getTextContent();
+
+                        String autorIdAviso = identificacion.getElementsByTagName("AutorID").item(0).getTextContent();
+                        String activoAviso = identificacion.getElementsByTagName("Activo").item(0).getTextContent();
+
+
+                        // Crear instancia de Aviso
+                        Avisos aviso = new Avisos(idAviso, tituloAviso, descripcionAviso, fechaPublicacionAviso, fechaExpiracionAviso, autorIdAviso, activoAviso);
+                        avisos.add(aviso);
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+
+            }
+
+            return avisos;
+        }
+
+        @Override
+        protected void onPostExecute(List<Avisos> resultado) {
+            super.onPostExecute(resultado);
+            if (callback != null) {
+                callback.onAvisosCompletados(resultado);
+            }
+        }
+    }
+
 }

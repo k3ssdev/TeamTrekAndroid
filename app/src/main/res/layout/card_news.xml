@@ -30,6 +30,21 @@
                 android:showDividers="middle"
                 android:dividerPadding="8dp">
 
+                <!-- ID -->
+                <TableRow>
+                    <TextView
+                        android:id="@+id/idLabel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="ID"
+                        android:textSize="13sp"
+                        android:textStyle="bold" />
+                    <TextView
+                        android:id="@+id/idValue"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="13sp" />
+                </TableRow>
                 <!-- Título -->
                 <TableRow>
                     <TextView

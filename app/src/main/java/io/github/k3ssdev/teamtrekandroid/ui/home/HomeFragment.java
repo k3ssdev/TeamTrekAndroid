@@ -2,54 +2,64 @@ package io.github.k3ssdev.teamtrekandroid.ui.home;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.preference.PreferenceManager;
 
-import java.util.List;
+import java.util.ArrayList;
 
+import io.github.k3ssdev.teamtrekandroid.R;
 import io.github.k3ssdev.teamtrekandroid.SharedViewModel;
-import io.github.k3ssdev.teamtrekandroid.database.DatabaseHandler;
+import io.github.k3ssdev.teamtrekandroid.database.Avisos;
+import io.github.k3ssdev.teamtrekandroid.database.AvisosAdapter;
+import io.github.k3ssdev.teamtrekandroid.database.DatabaseHandler.AvisosTask;
+import io.github.k3ssdev.teamtrekandroid.database.DatabaseHandler.ConsultarEmpleadoTask;
 import io.github.k3ssdev.teamtrekandroid.database.Empleado;
 import io.github.k3ssdev.teamtrekandroid.databinding.FragmentHomeBinding;
 
 public class HomeFragment extends Fragment {
 
     private FragmentHomeBinding binding;
+    private AvisosAdapter avisosAdapter;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        HomeViewModel homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
+        SharedViewModel sharedViewModel = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
 
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        SharedViewModel sharedViewModel = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
+        final ListView listView = binding.listView;
+        avisosAdapter = new AvisosAdapter(getContext(), new ArrayList<>());
+        listView.setAdapter(avisosAdapter);
 
         // Observar los cambios en el modelo de datos compartido
         sharedViewModel.getSelected().observe(getViewLifecycleOwner(), username -> {
-            Log.d("HomeFragment", "Username recibido: " + username);
-
             SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(requireContext());
 
-            // Llama al AsyncTask para obtener los datos del empleado
-            new DatabaseHandler.ConsultarEmpleadoTask(new DatabaseHandler.ConsultarEmpleadoCallback() {
-                @Override
-                public void onConsultaCompletada(List<Empleado> resultado) {
-                    // Aquí actualizas tu UI con el resultado
-                    // Como es un ejemplo, solo actualizaré el nombre del empleado
-                    if (!resultado.isEmpty()) {
-                        // Obtiene el primer empleado (en caso de que haya más de uno, ajusta según tu lógica)
-                        Empleado empleado = resultado.get(0);
-                        binding.nombreUsuario.setText(empleado.getNombre());
-                        binding.departamentoUsuario.setText(empleado.getNombreDepartamento());
-                        binding.emailUsuario.setText(empleado.getEmail());
-                    }
+            // Consulta de datos del empleado
+            new ConsultarEmpleadoTask(empleadoResult -> {
+                // Actualizar la UI con los datos del empleado
+                if (!empleadoResult.isEmpty()) {
+                    Empleado empleado = empleadoResult.get(0); // Tomamos el primer resultado como ejemplo
+                    binding.nombreUsuario.setText(empleado.getNombre());
+                    binding.departamentoUsuario.setText(empleado.getNombreDepartamento());
+                    // Y así sucesivamente con el resto de datos del empleado...
+                }
+            }, sharedPreferences).execute(username);
+
+            // Consulta de avisos
+            new AvisosTask(avisosResult -> {
+                // Actualizar la UI con los avisos
+                if (!avisosResult.isEmpty()) {
+                    avisosAdapter.clear();
+                    avisosAdapter.addAll(avisosResult);
+                    avisosAdapter.notifyDataSetChanged();
                 }
             }, sharedPreferences).execute(username);
         });
@@ -63,5 +73,5 @@ public class HomeFragment extends Fragment {
         binding = null;
     }
 
-    // ... Asegúrate de tener definida la interfaz ConsultarEmpleadoCallback y la clase Empleado correctamente
+    // Aquí irían otras funciones y clases necesarias para este fragmento, si las hay...
 }
