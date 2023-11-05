@@ -2,6 +2,7 @@ package io.github.k3ssdev.teamtrekandroid;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -18,6 +19,7 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.preference.PreferenceManager;
 
 import java.util.List;
 
@@ -29,6 +31,8 @@ public class MainActivity extends AppCompatActivity {
 
     private AppBarConfiguration mAppBarConfiguration;
     private ActivityMainBinding binding;
+
+    private final MainActivity context = this;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,21 +68,21 @@ public class MainActivity extends AppCompatActivity {
         SharedViewModel sharedViewModel = new ViewModelProvider(this).get(SharedViewModel.class);
         sharedViewModel.select(userId);
 
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
         // Obtener datos del empleado y actualizar el nav_header_main
         new DatabaseHandler.ConsultarEmpleadoTask(new DatabaseHandler.ConsultarEmpleadoCallback() {
             @Override
             public void onConsultaCompletada(List<Empleado> resultado) {
                 if (!resultado.isEmpty()) {
-                    // Obtiene el primer empleado (en caso de que haya más de uno, ajusta según tu lógica)
+                    // Obtiene el primer empleado y actualiza la interfaz de usuario
                     Empleado empleado = resultado.get(0);
-                    // Actualiza el nombre y el correo del empleado en el nav_header_main
-                    TextView employeeNameTextView = (TextView) binding.navView.getHeaderView(0).findViewById(R.id.nav_employee_name);
-                    TextView employeeEmailTextView = (TextView) binding.navView.getHeaderView(0).findViewById(R.id.nav_employee_email);
+                    TextView employeeNameTextView = binding.navView.getHeaderView(0).findViewById(R.id.nav_employee_name);
+                    TextView employeeEmailTextView = binding.navView.getHeaderView(0).findViewById(R.id.nav_employee_email);
                     employeeNameTextView.setText(empleado.getNombre());
                     employeeEmailTextView.setText(empleado.getEmail());
                 }
             }
-        }).execute(userId);
+        }, sharedPreferences).execute(userId);
 
     }
 

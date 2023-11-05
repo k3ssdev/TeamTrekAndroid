@@ -1,5 +1,6 @@
 package io.github.k3ssdev.teamtrekandroid.ui.home;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -8,6 +9,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.preference.PreferenceManager;
 
 import java.util.List;
 
@@ -33,6 +35,8 @@ public class HomeFragment extends Fragment {
         sharedViewModel.getSelected().observe(getViewLifecycleOwner(), username -> {
             Log.d("HomeFragment", "Username recibido: " + username);
 
+            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(requireContext());
+
             // Llama al AsyncTask para obtener los datos del empleado
             new DatabaseHandler.ConsultarEmpleadoTask(new DatabaseHandler.ConsultarEmpleadoCallback() {
                 @Override
@@ -47,7 +51,7 @@ public class HomeFragment extends Fragment {
                         binding.emailUsuario.setText(empleado.getEmail());
                     }
                 }
-            }).execute(username);
+            }, sharedPreferences).execute(username);
         });
 
         return root;

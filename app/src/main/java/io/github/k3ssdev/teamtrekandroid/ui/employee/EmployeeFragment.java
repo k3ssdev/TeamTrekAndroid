@@ -1,5 +1,7 @@
 package io.github.k3ssdev.teamtrekandroid.ui.employee;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -51,6 +53,7 @@ public class EmployeeFragment extends Fragment {
     }
 
     private List<Empleado> getEmployeeDataFromDatabase(String username) {
+        SharedPreferences sharedPreferences = this.requireActivity().getSharedPreferences("io.github.k3ssdev.teamtrekandroid_preferences", Context.MODE_PRIVATE);
         DatabaseHandler.ConsultarEmpleadoTask consultarEmpleadoTask = new DatabaseHandler.ConsultarEmpleadoTask(new DatabaseHandler.ConsultarEmpleadoCallback() {
             @Override
             public void onConsultaCompletada(List<Empleado> resultado) {
@@ -59,7 +62,9 @@ public class EmployeeFragment extends Fragment {
                     employeeAdapter = new EmployeeAdapter(requireContext(), resultado);
                 }
             }
-        });
+        }, sharedPreferences);
+
+
 
         try {
             return consultarEmpleadoTask.execute(username).get();

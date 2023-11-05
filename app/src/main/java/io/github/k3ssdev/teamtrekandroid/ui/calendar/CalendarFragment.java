@@ -1,5 +1,6 @@
 package io.github.k3ssdev.teamtrekandroid.ui.calendar;
 
+import android.content.SharedPreferences;
 import android.icu.text.SimpleDateFormat;
 import android.os.Bundle;
 import android.util.Log;
@@ -11,6 +12,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.preference.PreferenceManager;
 
 import java.util.List;
 import java.util.Locale;
@@ -37,6 +39,9 @@ public class CalendarFragment extends Fragment {
         sharedViewModel.getSelected().observe(getViewLifecycleOwner(), username -> {
             Log.d("HomeFragment", "Username recibido: " + username);
 
+
+
+            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(requireContext());
             // Llama al AsyncTask para obtener los datos del empleado
             new DatabaseHandler.ConsultarEmpleadoTask(new DatabaseHandler.ConsultarEmpleadoCallback() {
                 @Override
@@ -57,7 +62,7 @@ public class CalendarFragment extends Fragment {
                         binding.textTurno.setText(horaInicio + " - " + horaFin);
                     }
                 }
-            }).execute(username);
+            }, sharedPreferences).execute(username);
         });
 
         return root;

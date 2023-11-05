@@ -194,14 +194,22 @@ public class DatabaseHandler {
     public static class ConsultarEmpleadoTask extends AsyncTask<String, Void, List<Empleado>> {
 
         private ConsultarEmpleadoCallback callback;
+        private SharedPreferences sharedPreferences;
 
-        public ConsultarEmpleadoTask(ConsultarEmpleadoCallback callback) {
+        public ConsultarEmpleadoTask(ConsultarEmpleadoCallback callback, SharedPreferences sharedPreferences) {
             this.callback = callback;
+            this.sharedPreferences = sharedPreferences; // Inicializar SharedPreferences
         }
 
         @Override
         protected List<Empleado> doInBackground(String... params) {
-            String urlString = "http://10.0.2.2/teamtrek/consultaempleados.php"; // Cambia esto a tu URL
+            //String urlString = "http://10.0.2.2/teamtrek/consultaempleados.php"; // Cambia esto a tu URL
+
+            String urlSettings= sharedPreferences.getString("pref_database_url", "http://10.0.2.2");
+            String token = sharedPreferences.getString("pref_token", "");
+
+            String urlString = urlSettings + "/teamtrek/consultaempleados.php";
+
 
             // Añade el parámetro de nombre de usuario a la URL si se ha proporcionado uno
             if (params != null && params.length > 0 && params[0] != null && !params[0].isEmpty()) {
