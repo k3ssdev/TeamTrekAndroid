@@ -3,10 +3,12 @@ package io.github.k3ssdev.teamtrekandroid;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.TextView;
 
 import com.google.android.material.navigation.NavigationView;
 
+import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -92,5 +94,33 @@ public class MainActivity extends AppCompatActivity {
         // Deja que NavigationUI maneje el botón de subir.
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
         return NavigationUI.navigateUp(navController, mAppBarConfiguration) || super.onSupportNavigateUp();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.action_settings) {
+            // Lógica para abrir la configuración fragment settings
+
+            // Navegar al fragment de configuración
+            NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
+            navController.navigate(R.id.nav_settings);
+
+
+            return true;
+        } else if (id == R.id.action_logout) {
+            // Lógica para cerrar la sesión
+            // Esto podría involucrar limpiar datos de sesión, mostrar un diálogo de confirmación, etc.
+            logout();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void logout() {
+        // Tu lógica para cerrar la sesión
+        // Por ejemplo, limpiar SharedPreferences, volver a la pantalla de login, etc.
     }
 }

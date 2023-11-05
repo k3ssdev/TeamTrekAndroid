@@ -31,4 +31,16 @@
     <string name="nombre_del_usuario">Nombre del Usuario</string>
     <string name="puesto_del_usuario">Puesto del Usuario</string>
     <string name="departamento_del_usuario">Departamento del Usuario</string>
+
+    <!-- Connection settings -->
+    <string name="pref_connection_category">Conexión</string>
+    <string name="pref_database_url_title">Database URL</string>
+    <string name="pref_database_url_summary">Añade la URL de la base de datos</string>
+    <string name="pref_database_url_dialog_title">Database URL</string>
+    <string name="pref_token_title">Token</string>
+    <string name="pref_token_summary">Añade el token de acceso</string>
+    <string name="pref_token_dialog_title">Access Token</string>
+    <string name="menu_settings">Settings</string>
+
+
 </resources>
