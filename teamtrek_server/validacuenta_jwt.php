@@ -8,7 +8,8 @@ use Firebase\JWT\Key;
 
 // Clave secreta para codificar y decodificar el token
 // Debes guardar esta clave en un lugar seguro, como una variable de entorno
-$jwtKey = getenv('JWT_SECRET_KEY');
+//$jwtKey = getenv('JWT_SECRET_KEY');
+$jwtKey = 'JWT_SECRET_KEY';
 
 // Intenta ejecutar el proceso de autenticación
 try {
@@ -17,23 +18,37 @@ try {
     // Establecer el modo de errores de PDO a excepciones
     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-    // Asegurarse de que la solicitud es POST
-    if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-        throw new Exception('Invalid request method, only POST is allowed');
-    }
+    // Asegúrate de que la solicitud es POST
+	if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+	    throw new Exception('Invalid request method, only POST is allowed');
+	}
 
-    // Obtener los datos del formulario
-    $usuario = $_POST['usuario'] ?? null;
-    $contrasena = $_POST['contrasena'] ?? null;
+	// Lee los datos JSON enviados con la solicitud POST
+	$json = file_get_contents('php://input');
+	$data = json_decode($json, true);
 
-    if (!$usuario || !$contrasena) {
-        throw new Exception('Username and password are required');
-    }
+	// Comprueba si se decodificaron correctamente los datos JSON
+	if (is_null($data)) {
+	    throw new Exception('Error decoding JSON');
+	}
+
+	// Asigna las variables con los datos obtenidos del JSON
+	$usuario = $data['usuario'] ?? null;
+	$contrasena = $data['contrasena'] ?? null;
+
+	if (!$usuario || !$contrasena) {
+	    throw new Exception('Username and password are required');
+	}
+
 
     // Consulta SQL para obtener la contraseña hasheada del usuario
-    $sql = "SELECT EmpleadoID, Contrasena FROM Usuarios WHERE Usuario = :usuario LIMIT 1";
+    $sql = "SELECT * FROM Usuarios WHERE Usuario = :usuario AND Contrasena = :contrasena";
     $stmt = $conn->prepare($sql);
-    $stmt->bindParam(':usuario', $usuario, PDO::PARAM_STR);
+
+    
+    // Escapar los valores antes de incluirlos en la consulta
+    $stmt->bindParam(':usuario', $usuario);
+    $stmt->bindParam(':contrasena', $contrasena);
     $stmt->execute();
 
     if ($stmt->rowCount() === 0) {
@@ -43,9 +58,9 @@ try {
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
     // Verificar la contraseña con la versión hasheada
-    if (!password_verify($contrasena, $user['Contrasena'])) {
-        throw new Exception('Invalid password');
-    }
+    //if (!password_verify($contrasena, $user['Contrasena'])) {
+    //    throw new Exception('Invalid password');
+    //}
 
     // Generar el token JWT
     $issuedAt = time();
