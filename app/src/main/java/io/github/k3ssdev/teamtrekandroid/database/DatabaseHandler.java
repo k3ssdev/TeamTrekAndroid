@@ -1,9 +1,13 @@
 package io.github.k3ssdev.teamtrekandroid.database;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.widget.Toast;
+
+import androidx.preference.PreferenceManager;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -33,19 +37,34 @@ import io.github.k3ssdev.teamtrekandroid.MainActivity;
 
 public class DatabaseHandler {
     private Activity activity;
+    private Context context;
     public static final String EXTRA_MESSAGE = "io.github.k3ssdev.teamtrekandroid.USERNAME";
 
-    public DatabaseHandler(Activity activity) {
-        this.activity = activity;
-    }
+    SharedPreferences sharedPreferences;
 
+//    public DatabaseHandler(Activity activity ) {
+//        this.activity = activity;
+//    }
+
+    public DatabaseHandler(Activity activity ) {
+        this.activity = activity;
+        this.context = activity; // Establece el contexto como la actividad que se pasa
+        this.sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+    }
     public class ValidarUsuario extends AsyncTask<String, Void, String[]> {
         @Override
         protected String[] doInBackground(String... params) {
             String usuario = params[0];
             String contrasena = params[1];
+
+            // Aquí es donde recuperarás la URL desde las preferencias
+
+            String urlSettings= sharedPreferences.getString("pref_database_url", "http://10.0.2.2");
+            String token = sharedPreferences.getString("pref_token", "");
+
+            String urlString = urlSettings + "/teamtrek/validacuenta.php";
             //String urlString = "http://192.168.1.227/validacuenta.php"; // IP del servidor XAMPP
-            String urlString = "http://10.0.2.2/teamtrek/validacuenta.php"; // localhost para el emulador
+            //String urlString = "http://10.0.2.2/teamtrek/validacuenta.php"; // localhost para el emulador
 
             String resultado = null;
 
