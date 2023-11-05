@@ -1,285 +1,216 @@
 package io.github.k3ssdev.teamtrekandroid.database;
 
 import android.app.Activity;
-import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.widget.Toast;
 
+import com.auth0.android.jwt.JWT;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
 import java.io.BufferedReader;
-import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.io.StringReader;
-import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
-import io.github.k3ssdev.teamtrekandroid.MainActivity;
-
 public class DatabaseHandler {
     private Activity activity;
+    private SharedPreferences sharedPreferences;
     public static final String EXTRA_MESSAGE = "io.github.k3ssdev.teamtrekandroid.USERNAME";
+    public static final String PREFERENCES_FILE = "io.github.k3ssdev.teamtrekandroid.PREFERENCES";
+    public static final String JWT_TOKEN_KEY = "JWT_TOKEN";
+
+    public interface ValidacionCallback {
+        void onValidacionCompletada(boolean exito, String empleadoID, String mensaje);
+    }
+
+    public interface ConsultaCallback {
+        void onConsultaCompletada(JSONObject resultado, String mensaje);
+    }
 
     public DatabaseHandler(Activity activity) {
         this.activity = activity;
+        this.sharedPreferences = activity.getSharedPreferences(PREFERENCES_FILE, Activity.MODE_PRIVATE);
     }
 
-    public class ValidarUsuario extends AsyncTask<String, Void, String[]> {
-        @Override
-        protected String[] doInBackground(String... params) {
-            String usuario = params[0];
-            String contrasena = params[1];
-            //String urlString = "http://192.168.1.227/validacuenta.php"; // IP del servidor XAMPP
-            String urlString = "http://10.0.2.2/teamtrek/validacuenta.php"; // localhost para el emulador
+    public void validarUsuario(String usuario, String contrasena, ValidacionCallback callback) {
+        new ValidarUsuarioTask(callback).execute(usuario, contrasena);
+    }
 
-            String resultado = null;
-
-            try {
-                // Crear la conexión HTTP
-                URL url = new URL(urlString);
-                HttpURLConnection conexion = (HttpURLConnection) url.openConnection();
-                conexion.setRequestMethod("POST");
-                conexion.setDoOutput(true);
-
-                // Agrega el token como cabecera a la solicitud, COMENTAR ESTA LÍNEA PARA PROBAR LA APP EN SERVER PROPIO
-                //conexion.setRequestProperty("Authorization", "Bearer " + token);
-
-                // Crear los datos del formulario
-                String datos = "usuario=" + URLEncoder.encode(usuario, "UTF-8") + "&contrasena=" + URLEncoder.encode(contrasena, "UTF-8");
-
-                // Escribir los datos en el cuerpo de la petición
-                OutputStream outputStream = conexion.getOutputStream();
-                outputStream.write(datos.getBytes(StandardCharsets.UTF_8));
-                outputStream.flush();
-                outputStream.close();
-
-                // Leer la respuesta del servidor
-                InputStream entrada = conexion.getInputStream();
-                BufferedReader lector = new BufferedReader(new InputStreamReader(entrada));
-                StringBuilder respuesta = new StringBuilder();
-                String linea;
-                while ((linea = lector.readLine()) != null) {
-                    respuesta.append(linea);
-                }
-
-                // Cerrar la conexión HTTP
-                entrada.close();
-                conexion.disconnect();
-
-                // Procesar la respuesta del servidor
-                resultado = respuesta.toString();
-
-                // Parsear la respuesta XML
-                Document document = XMLParser.convertStringToXMLDocument(resultado);
-
-                // Inicializar el ID del empleado como una cadena vacía
-                String empleadoID = "";
-
-                // Obtener el contenido del elemento "estado"
-                NodeList estadoNodes = document.getElementsByTagName("estado");
-                if (estadoNodes.getLength() > 0) {
-                    Node estadoNode = estadoNodes.item(0);
-                    String estado = estadoNode.getTextContent();
-
-                    // Asignar el resultado a la variable resultado
-                    resultado = estado;
-
-                    // Si el estado es "ok", intentar obtener el ID del empleado
-                    if ("ok".equals(estado)) {
-                        NodeList idNodes = document.getElementsByTagName("EmpleadoID");
-                        if (idNodes.getLength() > 0) {
-                            Node idNode = idNodes.item(0);
-                            empleadoID = idNode.getTextContent();
-                        }
-                    }
-                } else {
-                    // Manejar el caso en el que no se pueda encontrar el elemento "estado"
-                    resultado = null;
-                }
-
-                // Crear un array para guardar el resultado, el usuario y la contraseña
-                String[] resultadoYDatos = new String[4];
-                resultadoYDatos[0] = resultado;   // Resultado de la validación
-                resultadoYDatos[1] = usuario;     // Nombre de usuario
-                resultadoYDatos[2] = contrasena;  // Contraseña
-                resultadoYDatos[3] = empleadoID;  // ID del empleado
-
-
-                return resultadoYDatos; // Devuelve el array
-
-            } catch (Exception e) {
-                e.printStackTrace();
+    public void consultarEmpleado(String empleadoID, ConsultaCallback callback) {
+        String jwtToken = sharedPreferences.getString(JWT_TOKEN_KEY, null);
+        if (jwtToken == null || !isTokenValid(jwtToken)) {
+            if (callback != null) {
+                callback.onConsultaCompletada(null, "Token no válido o expirado.");
             }
-            return null; // Devuelve null si hay un error
+            return;
         }
 
-        @Override
-        protected void onPostExecute(String[] resultadoYDatos) {
-            if (resultadoYDatos != null) {
-                String resultado = resultadoYDatos[0]; // Resultado de la validación
-                String usuario = resultadoYDatos[1]; // Nombre de usuario
-                String contrasena = resultadoYDatos[2]; // Contraseña (assuming you need to pass this too)
-                String empleadoID = resultadoYDatos[3]; // ID del empleado
+        new ConsultarEmpleadoTask(callback, jwtToken).execute(empleadoID);
+    }
 
-                // Verifica el resultado y realiza las acciones necesarias
-                if ("ok".equals(resultado)) {
-                    // El resultado es "ok", abre la segunda actividad
-                    Intent intent = new Intent(activity, MainActivity.class);
-
-                    // Pasar el nombre de usuario y el ID del empleado a la actividad principal
-                    //intent.putExtra("EXTRA_USUARIO", usuario);
-                    intent.putExtra(EXTRA_MESSAGE, empleadoID);
-
-
-                    activity.startActivity(intent);
-
-
-                } else if (resultado.equals("ko")) {
-                    // El resultado es "ko", realiza otra acción
-                    Toast.makeText(activity, "Usuario/Contraseña incorrectos", Toast.LENGTH_SHORT).show();
-                    //SQLiteHandler sqLiteHandler = new SQLiteHandler(activity\);
-
-                    // Insertar registro en la base de datos
-                    //sqLiteHandler\.insertarRegistro(usuario\, contrasena\);
-
-                    // Abrir LogActivity
-                    //Intent intent\ = new Intent(activity\, LogActivity.class);
-                    //activity\.startActivity(intent\);
-                }
-            } else {
-                // El resultado es null, hubo un error en la petición
-                Toast.makeText(activity, "Error en la conexión", Toast.LENGTH_SHORT).show();
-            }
+    private boolean isTokenValid(String token) {
+        try {
+            JWT jwt = new JWT(token);
+            return !jwt.isExpired(10); // buffer de 10 segundos
+        } catch (Exception e) {
+            return false;
         }
     }
 
-    public interface ConsultarEmpleadoCallback {
-        void onConsultaCompletada(List<Empleado> resultado);
-    }
+    private class ValidarUsuarioTask extends AsyncTask<String, Void, String> {
+        private ValidacionCallback callback;
 
-    public static class ConsultarEmpleadoTask extends AsyncTask<String, Void, List<Empleado>> {
-
-        private ConsultarEmpleadoCallback callback;
-
-        public ConsultarEmpleadoTask(ConsultarEmpleadoCallback callback) {
+        ValidarUsuarioTask(ValidacionCallback callback) {
             this.callback = callback;
         }
 
         @Override
-        protected List<Empleado> doInBackground(String... params) {
-            String urlString = "http://10.0.2.2/teamtrek/consultaempleados.php"; // Cambia esto a tu URL
-
-            // Añade el parámetro de nombre de usuario a la URL si se ha proporcionado uno
-            if (params != null && params.length > 0 && params[0] != null && !params[0].isEmpty()) {
-                try {
-                    String userid = params[0];
-
-                    urlString += "?userid=" + URLEncoder.encode(userid, "UTF-8");
-
-                } catch (UnsupportedEncodingException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            // Crea una lista vacía para guardar los empleados
-            List<Empleado> empleados = new ArrayList<>();
-
-            // Realiza la petición GET
+        protected String doInBackground(String... strings) {
+            String usuario = strings[0];
+            String contrasena = strings[1];
             try {
-                URL url = new URL(urlString);
+                URL url = new URL("http://localhost/teamtrek/validacuenta.php");
                 HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-                connection.setRequestMethod("GET");
+                connection.setRequestMethod("POST");
+                connection.setRequestProperty("Content-Type", "application/json");
+                connection.setDoOutput(true);
 
-                InputStream input = connection.getInputStream();
-                BufferedReader reader = new BufferedReader(new InputStreamReader(input));
-                StringBuilder response = new StringBuilder();
-                String line;
+                JSONObject authDetails = new JSONObject();
+                authDetails.put("username", usuario);
+                authDetails.put("password", contrasena);
 
-                while ((line = reader.readLine()) != null) {
-                    response.append(line);
-                }
+                OutputStreamWriter writer = new OutputStreamWriter(connection.getOutputStream());
+                writer.write(authDetails.toString());
+                writer.flush();
+                writer.close();
 
-                connection.disconnect();
-
-                String xmlString = response.toString();
-                DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-                DocumentBuilder builder = factory.newDocumentBuilder();
-                Document document = builder.parse(new InputSource(new StringReader(xmlString)));
-
-                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-                SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
-
-                NodeList empleadoNodes = document.getElementsByTagName("empleado");
-
-                for (int i = 0; i < empleadoNodes.getLength(); i++) {
-                    Node empleadoNode = empleadoNodes.item(i);
-                    if (empleadoNode.getNodeType() == Node.ELEMENT_NODE) {
-                        Element empleadoElement = (Element) empleadoNode;
-
-                        // Identificacion
-                        Element identificacion = (Element) empleadoElement.getElementsByTagName("identificacion").item(0);
-                        int idEmpleado = Integer.parseInt(identificacion.getElementsByTagName("ID").item(0).getTextContent());
-                        String nombreEmpleado = identificacion.getElementsByTagName("Nombre").item(0).getTextContent();
-                        String usuarioEmpleado = identificacion.getElementsByTagName("Usuario").item(0).getTextContent();
-                        Date fechaIngresoEmpleado = dateFormat.parse(identificacion.getElementsByTagName("FechaIngreso").item(0).getTextContent());
-
-                        // Departamento
-                        String nombreDepartamento = empleadoElement.getElementsByTagName("NombreDepartamento").item(0).getTextContent();
-
-                        // Horario
-                        String descripcionHorario = empleadoElement.getElementsByTagName("DescripcionHorario").item(0).getTextContent();
-                        Date horaInicio = timeFormat.parse(empleadoElement.getElementsByTagName("HoraInicio").item(0).getTextContent());
-                        Date horaFin = timeFormat.parse(empleadoElement.getElementsByTagName("HoraFin").item(0).getTextContent());
-
-                        // Datos personales
-                        Element datosPersonales = (Element) empleadoElement.getElementsByTagName("datosPersonales").item(0);
-                        String telefonoEmpleado = datosPersonales.getElementsByTagName("Telefono").item(0).getTextContent();
-                        String direccionEmpleado = datosPersonales.getElementsByTagName("Direccion").item(0).getTextContent();
-                        String emailEmpleado = datosPersonales.getElementsByTagName("Email").item(0).getTextContent();
-                        Date fechaNacimientoEmpleado = dateFormat.parse(datosPersonales.getElementsByTagName("FechaNacimiento").item(0).getTextContent());
-                        String nifEmpleado = datosPersonales.getElementsByTagName("NIF").item(0).getTextContent();
-
-                        // Crear instancia de Empleado
-                        Empleado empleado = new Empleado(
-                                idEmpleado, nombreEmpleado, fechaIngresoEmpleado, nombreDepartamento,
-                                descripcionHorario, horaInicio, horaFin, usuarioEmpleado,
-                                telefonoEmpleado, direccionEmpleado, emailEmpleado,
-                                fechaNacimientoEmpleado, nifEmpleado
-                        );
-                        empleados.add(empleado);
+                int responseCode = connection.getResponseCode();
+                if (responseCode == HttpURLConnection.HTTP_OK) {
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                    StringBuilder stringBuilder = new StringBuilder();
+                    String line;
+                    while ((line = reader.readLine()) != null) {
+                        stringBuilder.append(line);
                     }
+                    reader.close();
+                    return stringBuilder.toString();
+                } else {
+                    return null;
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-
+                return null;
             }
-
-            return empleados;
         }
 
         @Override
-        protected void onPostExecute(List<Empleado> resultado) {
-            super.onPostExecute(resultado);
-            if (callback != null) {
-                callback.onConsultaCompletada(resultado);
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            if (s != null) {
+                try {
+                    JSONObject jsonObject = new JSONObject(s);
+                    String jwtToken = jsonObject.getString("token");
+                    sharedPreferences.edit().putString(JWT_TOKEN_KEY, jwtToken).apply();
+
+                    if (callback != null) {
+                        callback.onValidacionCompletada(true, jwtToken, "Usuario validado exitosamente.");
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    if (callback != null) {
+                        callback.onValidacionCompletada(false, null, "Error en la respuesta del servidor.");
+                    }
+                }
+            } else {
+                if (callback != null) {
+                    callback.onValidacionCompletada(false, null, "No se pudo conectar con el servidor o la respuesta fue errónea.");
+                }
+            }
+        }
+    }
+
+    private class ConsultarEmpleadoTask extends AsyncTask<String, Void, JSONObject> {
+        private ConsultaCallback callback;
+        private String jwtToken;
+
+        ConsultarEmpleadoTask(ConsultaCallback callback, String jwtToken) {
+            this.callback = callback;
+            this.jwtToken = jwtToken;
+        }
+
+        @Override
+        protected JSONObject doInBackground(String... strings) {
+            String empleadoID = strings[0];
+            try {
+                URL url = new URL("http://localhost/teamtrek/consultaempleados.php?userid=" + empleadoID);
+                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                connection.setRequestMethod("GET");
+                connection.setRequestProperty("Authorization", "Bearer " + jwtToken);
+                connection.connect();
+
+                int responseCode = connection.getResponseCode();
+                if (responseCode == HttpURLConnection.HTTP_OK) {
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                    StringBuilder stringBuilder = new StringBuilder();
+                    String line;
+                    while ((line = reader.readLine()) != null) {
+                        stringBuilder.append(line);
+                    }
+                    reader.close();
+                    return new JSONObject(stringBuilder.toString());
+                } else {
+                    return null;
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                return null;
             }
         }
 
-
+        @Override
+        protected void onPostExecute(JSONObject jsonObject) {
+            super.onPostExecute(jsonObject);
+            if (jsonObject != null) {
+                if (callback != null) {
+                    callback.onConsultaCompletada(jsonObject, "Consulta completada exitosamente.");
+                }
+            } else {
+                if (callback != null) {
+                    callback.onConsultaCompletada(null, "No se pudo obtener la información del empleado.");
+                }
+            }
+        }
     }
+
+    // Métodos para leer y manejar XML
+
+    public String getValueFromXML(String xmlString, String tagName) {
+        try {
+            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder builder = factory.newDocumentBuilder();
+            Document doc = builder.parse(new InputSource(new StringReader(xmlString)));
+            NodeList nodes = doc.getElementsByTagName(tagName);
+            if (nodes.getLength() > 0) {
+                return nodes.item(0).getTextContent();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    // Otros métodos relacionados con XML
+
+    // Aquí añadirías cualquier otra lógica necesaria para manejar la base de datos
 }
