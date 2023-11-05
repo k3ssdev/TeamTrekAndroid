@@ -56,7 +56,7 @@ public class LoginActivity extends AppCompatActivity {
                 @Override
                 public void onValidacionCompletada(boolean exito, String empleadoID, String mensaje) {
                     // Si la validación es exitosa, iniciar la actividad que deseas y pasa la información necesaria.
-                    if(exito) {
+                    if (exito) {
                         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                         intent.putExtra(EXTRA_EMPLEADO, empleadoID); // Asegúrate de definir esta constante o usar la clave adecuada para el Intent.
                         startActivity(intent);
@@ -66,6 +66,7 @@ public class LoginActivity extends AppCompatActivity {
                         Toast.makeText(LoginActivity.this, mensaje, Toast.LENGTH_LONG).show();
                     }
                 }
+
                 @Override
                 public void onError(String mensaje) {
                     // Si hay un error, muestra un Toast con el mensaje de error.
