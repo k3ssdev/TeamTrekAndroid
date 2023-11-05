@@ -61,7 +61,7 @@ public class EmployeeFragment extends Fragment {
 
 
                             try {
-                                Empleado empleado = parseEmpleado(empleadoJson, formatoFecha, formatoHora);
+                                Empleado empleado = Empleado.parseEmpleado(empleadoJson, formatoFecha, formatoHora);
                                 empleadosTemporales.add(empleado);
                             } catch (JSONException | ParseException e) {
                                 e.printStackTrace();
@@ -92,47 +92,7 @@ public class EmployeeFragment extends Fragment {
                 }
             }
 
-            private Empleado parseEmpleado(JSONObject empleadoJson, SimpleDateFormat formatoFecha, SimpleDateFormat formatoHora) throws JSONException, ParseException {
-                // Extrayendo cada objeto del JSONObject principal
 
-                JSONObject identificacion = empleadoJson.getJSONObject("identificacion");
-                JSONObject departamento = empleadoJson.getJSONObject("departamento");
-                JSONObject horario = empleadoJson.getJSONObject("horario");
-                JSONObject datosPersonales = empleadoJson.getJSONObject("datosPersonales");
-
-                String id = identificacion.getString("ID");
-                String nombre = identificacion.getString("Nombre");
-                Date fechaIngreso = formatoFecha.parse(identificacion.getString("FechaIngreso"));
-                String nombreDepartamento = departamento.getString("NombreDepartamento");
-                String descripcionHorario = horario.getString("DescripcionHorario");
-                Date horaInicio = formatoHora.parse(horario.getString("HoraInicio"));
-                Date horaFin = formatoHora.parse(horario.getString("HoraFin"));
-                String usuario = identificacion.getString("Usuario");
-                String telefono = datosPersonales.getString("Telefono");
-                String direccion = datosPersonales.getString("Direccion");
-                String email = datosPersonales.getString("Email");
-                Date fechaNacimiento = formatoFecha.parse(datosPersonales.getString("FechaNacimiento"));
-                String nif = datosPersonales.getString("NIF");
-
-                // Convierte el ID a entero (asegúrate de que el ID sea un entero válido en tu JSON)
-                int idInt = Integer.parseInt(id);
-
-                return new Empleado(
-                        idInt,
-                        nombre,
-                        fechaIngreso,
-                        nombreDepartamento,
-                        descripcionHorario,
-                        horaInicio,
-                        horaFin,
-                        usuario,
-                        telefono,
-                        direccion,
-                        email,
-                        fechaNacimiento,
-                        nif
-                );
-            }
         };
 
         // get intent extra_empleado
