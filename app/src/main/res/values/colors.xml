@@ -20,5 +20,6 @@
     <color name="background_dark">#121212</color>
     <color name="botonEntrada">#4CAF50</color>
     <color name="botonSalida">#F44336</color>
+    <color name="botonSettings">#78909C</color>
 
 </resources>

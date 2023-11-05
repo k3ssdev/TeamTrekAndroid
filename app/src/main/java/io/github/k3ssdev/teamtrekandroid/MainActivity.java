@@ -1,5 +1,6 @@
 package io.github.k3ssdev.teamtrekandroid;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -9,6 +10,7 @@ import android.widget.TextView;
 import com.google.android.material.navigation.NavigationView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -120,7 +122,24 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void logout() {
-        // Tu lógica para cerrar la sesión
-        // Por ejemplo, limpiar SharedPreferences, volver a la pantalla de login, etc.
+        // Crear un AlertDialog para confirmar el cierre de sesión
+        new AlertDialog.Builder(this)
+                .setTitle("Cerrar sesión") // Titulo del diálogo
+                .setMessage("¿Estás seguro de que quieres cerrar sesión?") // Mensaje de confirmación
+                .setPositiveButton("Sí", new DialogInterface.OnClickListener() { // Botón de confirmación
+                    public void onClick(DialogInterface dialog, int which) {
+                        // Aquí iría la lógica para limpiar los datos de la sesión del usuario
+
+                        // Inicia LoginActivity y finaliza la actividad actual
+                        Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(intent);
+                        finish(); // Finaliza MainActivity
+                    }
+                })
+                .setNegativeButton("No", null) // Botón de cancelación no hace nada y cierra el diálogo
+                .setIcon(android.R.drawable.ic_dialog_alert) // Icono
+                .show(); // Mostrar el AlertDialog
     }
+
 }
