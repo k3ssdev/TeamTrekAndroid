@@ -1,147 +1,159 @@
-<LinearLayout
+<ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:padding="5dp">
+    android:layout_height="match_parent"
+    android:fillViewport="true">
 
-    <androidx.cardview.widget.CardView
-        android:id="@+id/cardViewAviso"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="8dp"
-        app:cardCornerRadius="8dp"
-        app:cardElevation="4dp">
+        android:orientation="vertical"
+        android:padding="8dp">
 
-        <LinearLayout
+        <!-- CardView para Aviso de Información -->
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardViewAviso"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="16dp">
+            android:layout_margin="5dp"
+            app:cardCornerRadius="8dp"
+            app:cardElevation="4dp">
 
-            <TableLayout
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:shrinkColumns="1"
-                android:stretchColumns="0"
-                android:divider="?android:attr/dividerHorizontal"
-                android:showDividers="middle"
-                android:dividerPadding="8dp">
+                android:orientation="vertical"
+                android:padding="8dp">
 
-                <!-- ID -->
-                <TableRow>
-                    <TextView
-                        android:id="@+id/idLabel"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="ID"
-                        android:textSize="13sp"
-                        android:textStyle="bold" />
-                    <TextView
-                        android:id="@+id/idValue"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textSize="13sp" />
-                </TableRow>
-                <!-- Título -->
-                <TableRow>
-                    <TextView
-                        android:id="@+id/tituloLabel"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Título"
-                        android:textSize="13sp"
-                        android:textStyle="bold" />
-                    <TextView
-                        android:id="@+id/tituloValue"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textSize="13sp" />
-                </TableRow>
+                <!-- ID del Aviso -->
 
-                <!-- Descripción -->
-                <TableRow>
-                    <TextView
-                        android:id="@+id/descripcionLabel"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Descripción"
-                        android:textSize="13sp"
-                        android:textStyle="bold" />
-                    <TextView
-                        android:id="@+id/descripcionValue"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textSize="13sp" />
-                </TableRow>
+                <TextView
+                    android:id="@+id/idLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="ID"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:visibility="gone"/>
 
-                <!-- Fecha de Publicación -->
-                <TableRow>
-                    <TextView
-                        android:id="@+id/fechaPublicacionLabel"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Fecha Publicación"
-                        android:textSize="13sp"
-                        android:textStyle="bold" />
-                    <TextView
-                        android:id="@+id/fechaPublicacionValue"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textSize="13sp" />
-                </TableRow>
+                <TextView
+                    android:id="@+id/idValue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="14sp"
+                    android:layout_marginBottom="3dp"
+                    android:visibility="gone"/>
 
-                <!-- Fecha de Expiración -->
-                <TableRow>
-                    <TextView
-                        android:id="@+id/fechaExpiracionLabel"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Fecha Expiración"
-                        android:textSize="13sp"
-                        android:textStyle="bold" />
-                    <TextView
-                        android:id="@+id/fechaExpiracionValue"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textSize="13sp" />
-                </TableRow>
 
-                <!-- Autor ID -->
-                <TableRow>
-                    <TextView
-                        android:id="@+id/autorIdLabel"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Autor ID"
-                        android:textSize="13sp"
-                        android:textStyle="bold" />
-                    <TextView
-                        android:id="@+id/autorIdValue"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textSize="13sp" />
-                </TableRow>
+                <!-- Título del Aviso -->
+                <TextView
+                    android:id="@+id/tituloLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Título"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
 
-                <!-- Activo -->
-                <TableRow>
-                    <TextView
-                        android:id="@+id/activoLabel"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Activo"
-                        android:textSize="13sp"
-                        android:textStyle="bold" />
-                    <TextView
-                        android:id="@+id/activoValue"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textSize="13sp" />
-                </TableRow>
+                <TextView
+                    android:id="@+id/tituloValue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="14sp"
+                    android:layout_marginBottom="3dp" />
 
-            </TableLayout>
-        </LinearLayout>
-    </androidx.cardview.widget.CardView>
-</LinearLayout>
+                <!-- Descripción del Aviso -->
+                <TextView
+                    android:id="@+id/descripcionLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Descripción"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/descripcionValue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="14sp"
+                    android:layout_marginBottom="3dp" />
+
+                <!-- Fecha de Publicación del Aviso -->
+                <TextView
+                    android:id="@+id/fechaPublicacionLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Fecha Publicación"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/fechaPublicacionValue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="14sp"
+                    android:layout_marginBottom="3dp" />
+
+                <!-- Fecha de Expiración del Aviso -->
+                <TextView
+                    android:id="@+id/fechaExpiracionLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Fecha Expiración"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:visibility="gone"/>
+
+                <TextView
+                    android:id="@+id/fechaExpiracionValue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="14sp"
+                    android:layout_marginBottom="3dp"
+                    android:visibility="gone"/>
+
+                <!-- Autor del Aviso -->
+                <TextView
+                    android:id="@+id/autorIdLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Autor ID"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:visibility="gone"/>
+
+                <TextView
+                    android:id="@+id/autorIdValue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="14sp"
+                    android:layout_marginBottom="3dp"
+                    android:visibility="gone"/>
+
+                <!-- Estado del Aviso (Activo/Inactivo) -->
+                <TextView
+                    android:id="@+id/activoLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Activo"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:visibility="gone"/>
+
+                <TextView
+                    android:id="@+id/activoValue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="14sp"
+                    android:layout_marginBottom="3dp"
+                    android:visibility="gone"/>
+
+                <!-- Agrega aquí más elementos si necesitas -->
+
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <!-- Puedes agregar más CardViews para otros avisos si es necesario -->
+
+    </LinearLayout>
+</ScrollView>

@@ -27,7 +27,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.9" />
+        app:layout_constraintGuide_percent="0.98" />
 
     <!-- Guideline izquierdo -->
     <androidx.constraintlayout.widget.Guideline
@@ -51,11 +51,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/nombre_del_usuario"
-        android:textSize="22sp"
         android:textColor="@color/blue"
-        app:layout_constraintTop_toTopOf="@+id/guidelineTop"
+        android:textSize="22sp"
+        app:layout_constraintEnd_toEndOf="@+id/guidelineRight"
         app:layout_constraintStart_toStartOf="@+id/guidelineLeft"
-        app:layout_constraintEnd_toEndOf="@+id/guidelineRight" />
+        app:layout_constraintTop_toTopOf="@+id/guidelineTop" />
 
     <!-- TextView para el puesto del usuario -->
     <TextView
@@ -63,11 +63,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/puesto_del_usuario"
-        android:textSize="18sp"
         android:textColor="@color/blue_grey"
-        app:layout_constraintTop_toBottomOf="@+id/nombreUsuario"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="@+id/guidelineRight"
         app:layout_constraintStart_toStartOf="@+id/guidelineLeft"
-        app:layout_constraintEnd_toEndOf="@+id/guidelineRight" />
+        app:layout_constraintTop_toBottomOf="@+id/nombreUsuario" />
 
     <!-- TextView para el departamento del usuario -->
     <TextView
@@ -75,18 +75,24 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/departamento_del_usuario"
-        android:textSize="18sp"
         android:textColor="@color/blue_grey"
-        app:layout_constraintTop_toBottomOf="@+id/departamentoUsuario"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="@+id/guidelineRight"
         app:layout_constraintStart_toStartOf="@+id/guidelineLeft"
-        app:layout_constraintEnd_toEndOf="@+id/guidelineRight" />
+        app:layout_constraintTop_toBottomOf="@+id/departamentoUsuario" />
+
     <ListView
         android:id="@+id/listView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/nombreUsuario"
+        app:layout_constraintBottom_toTopOf="@+id/guidelineBottom"
+        app:layout_constraintTop_toTopOf="@+id/guideline2"
         tools:listitem="@layout/item_employee" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_begin="127dp" />
 </androidx.constraintlayout.widget.ConstraintLayout>
