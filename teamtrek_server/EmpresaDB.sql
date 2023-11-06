@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: localhost
--- Tiempo de generación: 05-11-2023 a las 00:18:25
+-- Tiempo de generación: 06-11-2023 a las 00:17:02
 -- Versión del servidor: 10.4.28-MariaDB
 -- Versión de PHP: 8.0.28
 
@@ -20,9 +20,6 @@ SET time_zone = "+00:00";
 --
 -- Base de datos: `EmpresaDB`
 --
-
-CREATE DATABASE 'EmpresaDB';
-USE 'teamtrek';
 
 -- --------------------------------------------------------
 
@@ -49,10 +46,10 @@ INSERT INTO `Asistencia` (`EmpleadoID`, `Fecha`, `Entrada`, `Salida`) VALUES
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `avisos`
+-- Estructura de tabla para la tabla `Avisos`
 --
 
-CREATE TABLE `avisos` (
+CREATE TABLE `Avisos` (
   `id_aviso` int(11) NOT NULL,
   `titulo` varchar(255) NOT NULL,
   `descripcion` text NOT NULL,
@@ -63,10 +60,10 @@ CREATE TABLE `avisos` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Volcado de datos para la tabla `avisos`
+-- Volcado de datos para la tabla `Avisos`
 --
 
-INSERT INTO `avisos` (`id_aviso`, `titulo`, `descripcion`, `fecha_publicacion`, `fecha_expiracion`, `autor_id`, `activo`) VALUES
+INSERT INTO `Avisos` (`id_aviso`, `titulo`, `descripcion`, `fecha_publicacion`, `fecha_expiracion`, `autor_id`, `activo`) VALUES
 (1, 'Mantenimiento del Servidor', 'El servidor estará en mantenimiento el próximo sábado.', '2023-11-04 18:31:22', '2023-12-05 08:00:00', 101, 1),
 (2, 'Política de Vacaciones', 'La política de vacaciones ha sido actualizada. Por favor, revisen el documento adjunto.', '2023-11-04 18:31:22', '2024-01-01 00:00:00', 102, 1);
 
@@ -308,9 +305,9 @@ ALTER TABLE `Asistencia`
   ADD KEY `fk_EmpleadoID_Asistencia` (`EmpleadoID`);
 
 --
--- Indices de la tabla `avisos`
+-- Indices de la tabla `Avisos`
 --
-ALTER TABLE `avisos`
+ALTER TABLE `Avisos`
   ADD PRIMARY KEY (`id_aviso`),
   ADD KEY `autor_id` (`autor_id`);
 
@@ -384,9 +381,9 @@ ALTER TABLE `VacacionesAusencias`
 --
 
 --
--- AUTO_INCREMENT de la tabla `avisos`
+-- AUTO_INCREMENT de la tabla `Avisos`
 --
-ALTER TABLE `avisos`
+ALTER TABLE `Avisos`
   MODIFY `id_aviso` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
@@ -412,10 +409,10 @@ ALTER TABLE `Asistencia`
   ADD CONSTRAINT `fk_EmpleadoID_Asistencia` FOREIGN KEY (`EmpleadoID`) REFERENCES `Empleados` (`ID`);
 
 --
--- Filtros para la tabla `avisos`
+-- Filtros para la tabla `Avisos`
 --
-ALTER TABLE `avisos`
-  ADD CONSTRAINT `avisos_ibfk_1` FOREIGN KEY (`autor_id`) REFERENCES `Usuarios` (`EmpleadoID`);
+ALTER TABLE `Avisos`
+  ADD CONSTRAINT `Avisos_ibfk_1` FOREIGN KEY (`autor_id`) REFERENCES `Usuarios` (`EmpleadoID`);
 
 --
 -- Filtros para la tabla `DatosPersonales`
