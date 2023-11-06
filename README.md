@@ -72,7 +72,7 @@ Para que la aplicación funcione correctamente, es necesario disponer de un serv
 
 1. Clonar el repositorio https://github.com/k3ssdev/TeamTrekAndroid en Android Studio.
 
-2. Configura el servidor web con una base de datos MySQL y asegúrate de que esté en funcionamiento.
+2. Configura el servidor web con una base de datos MySQL y asegúrate de que esté en funcionamiento. IMPORTANTE: Asegúrate de que los ficheros PHP se encuentran en la carpeta /teamtrek/ del servidor web. La direccion de acceso sería similar a http://localhost/teamtrek/
 
 3. Ajusta la configuración de la aplicación para que se conecte al servidor y proporcione el token de acceso necesario en la sección de Configuración.
 
