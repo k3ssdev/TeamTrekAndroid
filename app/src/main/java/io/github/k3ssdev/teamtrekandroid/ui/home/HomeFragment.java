@@ -49,6 +49,7 @@ public class HomeFragment extends Fragment {
                     Empleado empleado = empleadoResult.get(0); // Tomamos el primer resultado como ejemplo
                     binding.nombreUsuario.setText(empleado.getNombre());
                     binding.departamentoUsuario.setText(empleado.getNombreDepartamento());
+                    binding.emailUsuario.setText(empleado.getEmail());
                     // Y así sucesivamente con el resto de datos del empleado...
                 }
             }, sharedPreferences).execute(username);
